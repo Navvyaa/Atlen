@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {SxProps,TextField} from '@mui/material';
 
-interface CustomInputProps {
+// interface CustomInputProps {
+//   label: string;
+//   type: string;
+//   [key: string]: any;
+// }
+interface InputComponentProps {
   label: string;
   type: string;
-  [key: string]: any;
+  placeholder?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  sx?: SxProps; 
 }
-
-const InputComponent: React.FC<CustomInputProps> = ({ label, type, ...props }) => {
+const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholder,onChange,required,sx }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isFocused ,setIsFocused] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -20,38 +24,46 @@ const InputComponent: React.FC<CustomInputProps> = ({ label, type, ...props }) =
   };
 
   return (
-    <div className='flex flex-col'> 
-    <div className="flex items-center justify-between mx-1">
-      <label className="text-sm text-gray-500 mb-1">{label}</label>
-      {type === 'password' && (
-        <div className="flex items-center">
-          <IconButton
-            aria-label="toggle password visibility"
-            onClick={handleClickShowPassword}
-            onMouseDown={handleMouseDownPassword}
-            edge="end"
-            size="small"
-          >
-            {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
-          <span className="text-sm text-gray-500 ml-1">{showPassword ? 'Hide' : 'Show'}</span>
-          </IconButton>
-        </div>
-      )}
-      </div>
+    <div className='flex flex-col relative'> 
+      <label className="text-md text-neutral-900 mb-1 font-semibold">{label}</label>
       <TextField
         type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
         variant="outlined"
         fullWidth
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => {
+          setIsFocused(false);
+          setShowPassword(false); // Hide password when input loses focus
+        }}
+        placeholder={placeholder}
+        onChange={onChange}
+        required={required}
         sx={{
           '& .MuiOutlinedInput-root': {
             backgroundColor: 'white',
-            borderRadius: '12px',
-            height:'40px',
-            marginBottom: '10px'
+            borderRadius: '16px',
+            height:'56px',
+            width:'100%',
+            position: 'relative',
+            marginBottom: '10px',
+            ...sx,
           },
         }}
-        {...props}
       />
+      {isFocused && type === 'password' && (
+        <button
+          onClick={handleClickShowPassword}
+          onMouseDown={handleMouseDownPassword}
+          className="absolute right-5 top-11"
+          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          {showPassword ? (
+            <img src="/eye-open.svg" alt="Hide" style={{ width: '20px', height: '20px' }} />
+          ) : (
+            <img src="/eye-closed.svg" alt="Show" style={{ width: '20px', height: '20px' }} />
+          )}
+        </button>
+      )}
     
     </div>
   );

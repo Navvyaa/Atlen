@@ -6,7 +6,7 @@ interface AuthLayoutProps {
   
   export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
-        <div className="blur-background ">
+        <div >
         <main >
           {children}
         </main>

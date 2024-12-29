@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Modal } from '@mui/material';
 import ButtonComponent from './ButtonComponent';
 import { useRouter } from 'next/navigation';
+import { useModal } from '@/app/context/ModalContext';
 interface LoginModalProps {
     open: boolean;
     onClose: () => void;
@@ -11,7 +12,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
     const router = useRouter();
 
     const handleEmailLoginClick = () => {
-      router.push('/login');
+        // onClose();
+        router.push('/login');
     };
 
     return (

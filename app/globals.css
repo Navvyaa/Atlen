@@ -9,7 +9,7 @@
   --primary-color-hover: #2563EB; 
   
 }
-
+/* 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -17,7 +17,7 @@
     --primary-color: #2563eb; 
     --primary-color-hover: #1d4ed8; 
   }
-}
+} */
 
 body {
   color: var(--foreground);

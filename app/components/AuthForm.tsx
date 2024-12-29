@@ -1,25 +1,33 @@
 "use client"
 import React, { useState } from 'react';
-import { 
+import {
   Box,
   Button,
   Divider,
   Typography,
+  Modal,
   IconButton
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+// import CloseIcon from '@mui/icons-material/Close';
+import ButtonComponent from './ButtonComponent';
+import { BackButton } from './BackButton';
 import Image from 'next/image';
 import InputComponent from './InputComponent';
 
 // interface AuthFormProps {
 //   onClose?: () => void;
 // }
+interface AuthFormProps {
+  mode: 'login' | 'register';
+}
 
-const AuthForm: React.FC= () => {
-  const [email,setEmail]=useState<string>("");
+const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // Handle form submission
@@ -27,73 +35,77 @@ const AuthForm: React.FC= () => {
 
   return (
     <>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 ,mx:2}}>
-        <Button
-          fullWidth
-          variant="outlined"
-          startIcon={
-            <Image 
-              src="/google-icon.svg" 
-              alt="Google" 
-              width={20} 
-              height={20}
+      {/* <Modal
+
+    > */}
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, mx: 2, width: '100%' }}>
+        <BackButton />
+
+        {/* <Divider sx={{ my: 2, color: 'gray' }}>OR</Divider> */}
+        {mode === 'register' && (
+          <>
+            <InputComponent
+              label="First Name"
+              type="text"
+              placeholder="First Name"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
+              required
             />
-          }
-          sx={{ mb:2 ,py:1 , borderRadius: '32px' }}
-        >
-          Log in with Google
-        </Button>
-
-        <Divider sx={{ my: 2, color: 'gray' }}>OR</Divider>
-
+            <InputComponent
+              label="Last Name"
+              type="text"
+              placeholder="Last Name"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+              required
+            />
+          </>
+        )}
         <InputComponent
-          label="Your email"
-          type="email"
+          label="Email address"
+          type="text"
+          placeholder="Email"
+          sx={{ mb: 2,py:3}}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-          required
+          // required
         />
 
         <InputComponent
-          label="Your password"
+          label="Password"
           type="password"
+          placeholder="Password"
+          sx={{ mb: 2,py:3 }}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-          required
+          // required
         />
+        {mode === 'login' && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
+            <button
+              className='text-black font-medium text-sm cursor-pointer mb-4 '
+            >
+              Forgot password?
+            </button>
+          </Box>
+        )}
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-          <Typography
-            variant="body2"
-            color="primary"
-            sx={{ cursor: 'pointer',mt:1 }}
-          >
-            Forgot password?
-          </Typography>
-        </Box>
+        <ButtonComponent type="submit" sx={{ mb: 1 ,width: '100%',py:1.5, fontSize: '20px' }}>
+          {mode === 'login' ? 'Sign In' : 'Join'}
+        </ButtonComponent>
+        {/* {mode === 'login' && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Typography
+              variant="body2"
+              color="#000000"
+              sx={{ cursor: 'pointer', mt: 1 }}
+            >
+              Don't have an account? Register
+            </Typography>
+          </Box>
+        )} */}
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{
-            mt: 1,
-            mb: 2,
-            borderRadius: '40px',
-            // borderRadius: '8px',
-            py: 1,
-            backgroundColor: 'blue-600',
-            opacity: (!email || !password )? 0.8 : 1,
-            '&:hover': {
-              backgroundColor: 'blue-700'
-            }
-          }}
-          disabled={!email || !password}
-        >
-          Log in
-        </Button>
 
-        
       </Box>
-      </>
+      {/* </Modal> */}
+    </>
   );
 };
 
