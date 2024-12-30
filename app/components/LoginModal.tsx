@@ -12,7 +12,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
     const router = useRouter();
 
     const handleEmailLoginClick = () => {
-        // onClose();
+        onClose();
         router.push('/login');
     };
 
@@ -42,7 +42,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
                     justifyContent: 'center',
                 }}
             >
-                <img src="./Ellipse.svg" alt="logo" className=' my-2 mb-6 ' />
+                <img src="./logo.svg" alt="logo" className=' my-2 mb-6 ' />
                 <p className='font-semibold text-2xl text-center mb-12'>
                     Sign In to unlock the best of Trippin
                     {/* </Typography> */}
@@ -50,7 +50,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
                 <ButtonComponent sx={{
                     mt: 1, mb: 2, p: 1, width: '100%', backgroundColor: 'white', border: '1px solid gray', color: '#3d3d3d', '&:hover': {
-                        backgroundColor: '#f0f0f0', 
+                        backgroundColor: '#f0f0f0',
                     },
                 }} onClick={() => console.log('Sign in with Google')}>
                     <img src="./google-icon.svg" className='px-2 ml-5 ' alt="" />
@@ -59,7 +59,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
                 <ButtonComponent sx={{
                     mt: 1, mb: 6, p: 1, width: '100%', color: "#3d3d3d", backgroundColor: 'white', border: '1px solid gray', '&:hover': {
-                        backgroundColor: '#f0f0f0', 
+                        backgroundColor: '#f0f0f0',
                     },
                 }} onClick={handleEmailLoginClick}>
                     <img src="./mail.svg" className='px-2' alt="" />
@@ -68,7 +68,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
                 <p className='text-neutral-900 text-sm text-center'>
                     By proceeding, you agree to our <a href=""><span className='underline'>Terms of Use</span></a> and <a href=''><span className='underline'> Privacy Policy</span></a>.
-                    </p>
+                </p>
             </Box>
         </Modal>
     );

@@ -1,16 +1,16 @@
 import { NextPage } from "next";
-import Link from "next/link";
 
-export const register: NextPage = () => {
-    return (
-        <div className=''>
-            <h1>Sign In</h1>
-            <Link href="/login">
-                <button>Go to Login Page</button>
-            </Link>
+import Navbar from "@/app/components/Navbar";
+import LoginPage from "@/app/components/LoginForm";
 
-        </div>
-    );
-}
 
-export default register;
+const Register: NextPage = () => {
+  return (
+    <div className="w-full">
+      <Navbar />
+      <LoginPage mode="register" />
+    </div>
+  );
+};
+
+export default Register;

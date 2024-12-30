@@ -10,7 +10,7 @@ const Login: NextPage = () => {
   return (
     <div className="w-full">
       <Navbar />
-      <LoginPage />
+      <LoginPage mode="login" />
     </div>
   );
 };
