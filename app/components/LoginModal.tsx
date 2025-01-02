@@ -30,7 +30,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     width: '100%',
-                    maxWidth: 510,
+                    maxWidth: 436,
                     bgcolor: 'background.paper',
                     border: 'none',
                     boxShadow: 24,

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {SxProps,TextField} from '@mui/material';
+import { useRouter, usePathname } from 'next/navigation';
 interface InputComponentProps {
   label: string;
   type: string;
@@ -7,11 +8,14 @@ interface InputComponentProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   sx?: SxProps; 
+  mode?: 'login' | 'register';
 }
-const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholder,onChange,required,sx }) => {
+const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholder,onChange,required,sx,mode }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isFocused ,setIsFocused] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
+  const currentPath = usePathname();
+
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
@@ -51,12 +55,14 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
         // onChange={onChange}
         onChange={handlePasswordChange}
         required={required}
+        // autoComplete='off'
+        // autofill='off'
         inputProps={type === 'password' ? { maxLength: 20 } : {}}
         sx={{
           '& .MuiOutlinedInput-root': {
             backgroundColor: 'white',
             borderRadius: '16px',
-            height:'56px',
+            height:'48px',
             fontSize: '20px',
             width:'100%',
             borderColor: !allRequirementsMet && !isFocused ? 'red' : 'inherit',
@@ -87,14 +93,14 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
           )}
         </button>
       )}
-    {type==="password" && isFocused && !allRequirementsMet && (
+    {type==="password"  &&  isFocused && !allRequirementsMet &&currentPath !== '/login' && (
         <div className="absolute mt-24 p-3 bg-[#D9E0FA] rounded-xl z-10 w-full text-[16px]">
           <p className="text-black mb-1 ">
-            Password must be at least 6 characters long and include:
+            Password must be at least 6 characters long and contain:
           </p>
           <div >
             {[
-              { text: 'One uppercase letter', check: validations.uppercase },
+            { text: 'One uppercase letter', check: validations.uppercase },
               { text: 'One lowercase letter', check: validations.lowercase },
               { text: 'One number', check: validations.number },
               { text: 'One special character (!@#$% etc.)', check: validations.special }

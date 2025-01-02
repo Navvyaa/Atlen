@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useModal } from '../context/ModalContext';
 import ButtonComponent from './ButtonComponent';
 import { BackButton } from './BackButton';
-import OtpInput from './OtpInput';
+import OtpPage from './OtpPage';
 
 const ForgotPasswordForm: React.FC = () => {
   const { isModalOpen, openModal, closeModal } = useModal();
@@ -40,6 +40,16 @@ const ForgotPasswordForm: React.FC = () => {
     }
   };
 
+  const handleVerifyOtp = (otp: string) => {
+    console.log('OTP Verified:', otp);
+    setStep(3); // Move to reset password step
+  };
+
+  const handleResendOtp = () => {
+    // Handle resend OTP logic
+    console.log('Resend OTP');
+  };
+
   return (
     <div className={isModalOpen ? 'blur-background' : ''}>
       <Modal
@@ -68,12 +78,14 @@ const ForgotPasswordForm: React.FC = () => {
           }}
         >
           <BackButton />
+          {step!=2 &&(<>
           <img src="./logo.svg" alt="" className='mb-8' />
           <p className='font-semibold mx-0 px-0 text-2xl text-center mb-4'>
             {step === 1 && 'Forgot Your Password?'}
-            {step === 2 && 'Enter the Code'}
             {step === 3 && 'Reset Password'}
           </p>
+          </>
+          )}
           {step === 1 && (
             <>
               <p className='text-center mt-3 mb-8 font-medium text-lg w-full text-black'>No problem, traveler! Provide your email, and we’ll send an OTP to reset your password instantly.</p>
@@ -90,10 +102,7 @@ const ForgotPasswordForm: React.FC = () => {
             </>
           )}
           {step === 2 && (
-            <>
-              <p className='text-center mt-3 mb-8 font-medium text-lg w-full text-black'>Enter the OTP code we have sent to your email.</p>
-              <OtpInput length={6} onChange={setOtp} />
-            </>
+                       <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} />
           )}
           {step === 3 && (
             <>
@@ -103,29 +112,23 @@ const ForgotPasswordForm: React.FC = () => {
                   type="password"
                   placeholder="Enter new password"
                   onChange={(e) => setNewPassword(e.target.value)}
-                  required
+                  // required
                 />
                 <InputComponent
                   label="Confirm Password"
                   type="password"
                   placeholder="Confirm new password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
+                  // required
                 />
               </div>
             </>
           )}
-            <ButtonComponent 
-            type="submit" 
-            onClick={handleNextStep} 
-            sx={{ my: 3, width: '100%', py: 1.5, fontSize: '20px', ...(step === 3 && { my: 5 }) }}
-            >
-            {step === 1 && 'Send OTP'}
-            {step === 2 && 'Verify'}
-            {step === 3 && 'Done'}
+           {step !== 2 && (
+            <ButtonComponent onClick={handleNextStep} sx={{ my: 3, width: '100%', py: 1.5, fontSize: '20px' }}>
+              {step === 1 && 'Send OTP'}
+              {step === 3 && 'Done'}
             </ButtonComponent>
-          {step === 2 && (
-            <p className='text-neutral-900 text-lg font-medium'>Didn't Recieve the code ? <button className='text-primary font-semibold'>Resend OTP</button></p>
           )}
         </Box>
       </Modal>

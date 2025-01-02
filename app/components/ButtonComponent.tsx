@@ -22,6 +22,7 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({ children, onClick, di
         borderRadius: '16px',
         paddingX: '20px',
         paddingY: '0px',
+        height: '56px',
         fontSize: '16px',
         fontWeight: '600', 
         minWidth: 'auto',

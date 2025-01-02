@@ -1,14 +1,15 @@
 import { NextPage } from "next";
 
 import Navbar from "@/app/components/Navbar";
-import LoginPage from "@/app/components/LoginForm";
+import RegisterForm from "@/app/components/RegisterForm";
+
 
 
 const Register: NextPage = () => {
   return (
     <div className="w-full">
       <Navbar />
-      <LoginPage mode="register" />
+      <RegisterForm />
     </div>
   );
 };

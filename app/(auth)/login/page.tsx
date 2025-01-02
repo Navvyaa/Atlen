@@ -1,16 +1,15 @@
 import { NextPage } from "next";
-import dynamic from "next/dynamic";
-import Navbar from "@/app/components/Navbar";
-import LoginPage from "@/app/components/LoginForm";
 
-// Dynamically import the client-side component
-// const LoginPage = dynamic(() => import("@/app/components/LoginForm"), { ssr: false });
+import Navbar from "@/app/components/Navbar";
+import LoginForm from "@/app/components/LoginForm";
+
 
 const Login: NextPage = () => {
+
   return (
     <div className="w-full">
       <Navbar />
-      <LoginPage mode="login" />
+      <LoginForm />
     </div>
   );
 };
