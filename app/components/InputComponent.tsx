@@ -8,9 +8,11 @@ interface InputComponentProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   sx?: SxProps; 
-  mode?: 'login' | 'register';
+  error?: boolean;
+  onInputChange?: () => void; 
+  // mode?: 'login' | 'register';
 }
-const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholder,onChange,required,sx,mode }) => {
+const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholder,onChange,required,sx,error,onInputChange }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isFocused ,setIsFocused] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
@@ -26,6 +28,10 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     onChange(e);
+    if (onInputChange) {
+      onInputChange(); // Call the callback to reset error state
+    }
+    // error=false
   };
 
 
@@ -34,14 +40,14 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
     lowercase: /[a-z]/.test(password),
     number: /[0-9]/.test(password),
     special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    length: password.length >= 6
+    length: password.length >= 8
   };
 
   const allRequirementsMet = Object.values(validations).every(Boolean);
 
   return (
     <div className='flex flex-col relative'> 
-      <label className="text-lg text-neutral-900 mb-1 font-semibold">{label}</label>
+      <label className="text-lg text-neutral-900 mb-2 font-semibold leading-7">{label}</label>
       <TextField
         type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
         variant="outlined"
@@ -52,23 +58,29 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
           setShowPassword(false); 
         }}
         placeholder={placeholder}
-        // onChange={onChange}
         onChange={handlePasswordChange}
         required={required}
-        // autoComplete='off'
-        // autofill='off'
         inputProps={type === 'password' ? { maxLength: 20 } : {}}
-        sx={{
+        error={error}
+         sx={{
           '& .MuiOutlinedInput-root': {
             backgroundColor: 'white',
             borderRadius: '16px',
             height:'48px',
-            fontSize: '20px',
+            fontSize: '16px',
             width:'100%',
-            borderColor: !allRequirementsMet && !isFocused ? 'red' : 'inherit',
             position: 'relative',
             // ":hover"outline:'none',
-            marginBottom: '10px',
+            marginBottom: '20px',
+            '& fieldset': {
+              borderColor: error ? 'red' : 'neutral-900', // Apply border color based on error state
+            },
+      '&:hover fieldset': {
+        borderColor:'blue', // Hover effect for border
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: error ? 'red' : 'neutral-900',
+      },
             ...sx,
             ...(type === 'password' && {
               '& input:not(:placeholder-shown)': {
@@ -81,6 +93,7 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
             />
             {isFocused && type === 'password' && (
         <button
+        type='button'
           onClick={handleClickShowPassword}
           onMouseDown={handleMouseDownPassword}
           className="absolute right-5 top-12 z-10"
@@ -94,21 +107,22 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
         </button>
       )}
     {type==="password"  &&  isFocused && !allRequirementsMet &&currentPath !== '/login' && (
-        <div className="absolute mt-24 p-3 bg-[#D9E0FA] rounded-xl z-10 w-full text-[16px]">
-          <p className="text-black mb-1 ">
-            Password must be at least 6 characters long and contain:
+        <div className="absolute mt-24 p-2 bg-[#D9E0FA] rounded-xl z-10 w-full text-[14px] leading-5 text-left">
+          <p className="text-black  ">
+            Password must contain :
           </p>
           <div >
             {[
-            { text: 'One uppercase letter', check: validations.uppercase },
+              { text: 'Atleast 8 characters', check: validations.length },
               { text: 'One lowercase letter', check: validations.lowercase },
+              { text: 'One uppercase letter', check: validations.uppercase },
               { text: 'One number', check: validations.number },
               { text: 'One special character (!@#$% etc.)', check: validations.special }
             ].map((req, index) => (
-              <div key={index} className="flex items-center space-x-2">
+              <div key={index} className="flex items-center ">
                 {req.check ? (
                   
-                  <img src="./tick.svg" alt="check" />
+                  <img src="./tick.svg" className="mr-1" alt="check" />
                 ) : (
                   <div className='mr-2.5 ml-0.5 text-lg text-green-800'>•</div>
                 )}

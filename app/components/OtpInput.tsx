@@ -4,9 +4,10 @@ interface OTPInputProps {
   length?: number;
   onComplete?: (code: string) => void;
   onChange: (otp: string) => void;
+  error?:boolean;
 }
 
-const OTPInput = ({ length = 6, onComplete,onChange }: OTPInputProps) => {
+const OTPInput = ({ length = 6, onComplete,onChange,error }: OTPInputProps) => {
   const [otp, setOtp] = useState<string[]>(new Array(length).fill(''));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -74,7 +75,7 @@ const OTPInput = ({ length = 6, onComplete,onChange }: OTPInputProps) => {
               onChange={e => handleChange(index, e.target.value)}
               onKeyDown={e => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="w-full h-12 text-center font-medium rounded-lg bg-neutral-100 focus:border-primary focus:outline-none border text-lg outline-none"
+              className={`w-full h-12 text-center font-medium rounded-lg bg-neutral-100 focus:border-primary focus:outline-none border text-lg outline-none ${error ? 'border-red-500' : 'border-gray-300'}`}
             />
             {!otp[index] && (
               <div className="absolute bottom-2 left-1.5 right-2  w-[78%] h-0.5 bg-neutral-700 rounded-lg"></div>

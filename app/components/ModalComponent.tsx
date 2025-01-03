@@ -1,31 +1,30 @@
 "use client";
 import React from 'react';
-import { Modal, Box } from '@mui/material';
-import { useModal } from '../context/ModalContext';
+import { Modal, Box, IconButton, Tooltip } from '@mui/material';
 import { useRouter } from 'next/navigation';
+// import CloseIcon from '@mui/icons-material/Close';
+// import { BackButton } from './BackButton';
+
 interface ModalComponentProps {
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const ModalComponent: React.FC<ModalComponentProps> = ({ children ,isOpen,onClose}) => {
-  const { isModalOpen, closeModal } = useModal();
+const ModalComponent: React.FC<ModalComponentProps> = ({ children, isOpen, onClose }) => {
   const router = useRouter();
+
   const handleBackdropClick = () => {
     onClose();
-    // router.push('/'); // Redirect to home page
+    router.push('/'); // Redirect to home page
   };
 
   return (
     <Modal
-      open={isModalOpen}
+      open={isOpen}
       onClose={handleBackdropClick}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
-    //   BackdropProps={{
-    //     onClick: closeModal,
-    //   }}
     >
       <Box
         sx={{
@@ -34,11 +33,12 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ children ,isOpen,onClos
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '100%',
-          maxWidth: 510,
+          maxWidth: "460px",
           bgcolor: 'background.paper',
           border: 'none',
           boxShadow: 24,
-          p: 4,
+          paddingX:"20px",
+          paddingY:"40px",
           borderRadius: '16px',
           display: 'flex',
           flexDirection: 'column',
@@ -46,6 +46,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ children ,isOpen,onClos
           justifyContent: 'center',
         }}
       >
+        <img src="./logo.svg" alt="logo" className=' mb-4 ' />
         {children}
       </Box>
     </Modal>

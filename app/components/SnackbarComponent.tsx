@@ -46,7 +46,7 @@ export interface SnackbarRef {
         case 'warning':
           return darken('#ff9800', 0.2); 
         case 'info':
-          return darken('#2196f3', 0.2); 
+          return darken('#ff9800', 0.2); 
         case 'success':
           return darken('#4caf50', 0.2); 
         default:
@@ -58,9 +58,9 @@ export interface SnackbarRef {
         case 'error':
           return <img src="./cicleCross.svg" alt="" />;
         case 'warning':
-          return <WarningIcon />;
-        case 'info':
           return <InfoIcon />;
+        case 'info':
+          return <WarningIcon />;
         case 'success':
           return <img src="./circleTick.svg" alt="" />;
         default:
@@ -69,13 +69,15 @@ export interface SnackbarRef {
     };
   
     return (
-      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert
          onClose={handleClose} 
          severity={severity} 
+        //  action={null}
          icon={getIcon(severity)}
          sx={{
-           width: 'auto' ,
+           width: '340px' ,
+           maxWidth:'100%',
            fontFamily:'urbanist',
            fontSize:'16px',
            fontWeight:'medium',

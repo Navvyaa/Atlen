@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
           Login
         </ButtonComponent>
       </nav>
-      <LoginModal open={isModalOpen} onClose={closeModal} />
+      <LoginModal open={isModalOpen} onClose={closeModal} step={1}/>
     </div>
   );
 };

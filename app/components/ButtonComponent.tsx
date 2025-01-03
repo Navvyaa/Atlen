@@ -3,7 +3,7 @@ import { Button, SxProps } from '@mui/material';
 
 interface ButtonComponentProps {
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (event: React.FormEvent) => void;
   disabled?: boolean;
   sx?: SxProps;
   type?: 'button' | 'submit' | 'reset';

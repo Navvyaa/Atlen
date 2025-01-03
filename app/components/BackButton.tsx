@@ -3,24 +3,34 @@ import { IconButton, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useRouter, usePathname } from 'next/navigation';
 
+interface BackButtonProps {
+  onBack?: () => void;
+}
 
 const routeBackMap: { [key: string]: string } = {
-  '/register': '/login',
+  // '/register': '/login',
   '/login': '/',
   '/forgot-password': '/login',
 };
 
+const BackButton: React.FC<BackButtonProps> = ({ onBack }) => {
 
-
-export const BackButton = () => {
   const router = useRouter();
   const currentPath = usePathname();
   const backRoute = routeBackMap[currentPath] || '/';
+  const handleBackClick = () => {
+    if (onBack) {
+      onBack();
+    } 
+    else {
+      router.push(backRoute);
+    }
+  };
 
   return (
     <Tooltip title="Back">
       <IconButton 
-        onClick={() => router.push(backRoute)}
+        onClick={handleBackClick}
         sx={{ 
           position: 'absolute',
           left: 16,
@@ -33,3 +43,5 @@ export const BackButton = () => {
     </Tooltip>
   );
 };
+
+export default BackButton;
