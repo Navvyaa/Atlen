@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import React, { Suspense } from 'react';
 
 import Navbar from "@/app/components/Navbar";
 import RegisterForm from "@/app/components/auth/RegisterForm";
@@ -10,8 +11,9 @@ const Register: NextPage = () => {
     <div className="w-full">
       <Navbar />
       {/* <EmailProvider> */}
-      <RegisterForm step={1}/>
-      {/* </EmailProvider> */}
+      <Suspense fallback={<div>Loading...</div>}>
+     <RegisterForm step={1}/>
+      </Suspense>
     </div>
   );
 };
