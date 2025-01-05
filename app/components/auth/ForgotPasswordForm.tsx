@@ -1,14 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Modal, Button, Typography } from '@mui/material';
-import InputComponent from './InputComponent';
+import InputComponent from '../ui/InputComponent';
 import { useRouter } from 'next/navigation';
-import { useModal } from '../context/ModalContext';
-import ButtonComponent from './ButtonComponent';
-import BackButton from './BackButton';
+import { useModal } from '../../context/ModalContext';
+import ButtonComponent from '../ui/ButtonComponent';
+import BackButton from '../ui/BackButton';
 import OtpPage from './OtpPage';
-import ModalComponent from './ModalComponent';
-import SnackbarComponent, { SnackbarRef } from './SnackbarComponent';
+import ModalComponent from '../ui/ModalComponent';
+import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
 
 
 const ForgotPasswordForm: React.FC = () => {
@@ -29,10 +28,10 @@ const ForgotPasswordForm: React.FC = () => {
   }, []);
 
   const handleCloseModal = () => {
-   
-      closeModal();
-      router.push('/');
-    
+
+    closeModal();
+    router.push('/');
+
   };
 
   const handleNextStep = () => {
@@ -119,7 +118,7 @@ const ForgotPasswordForm: React.FC = () => {
           <>
 
             <div className='w-full '>
-            {/* <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} /> */}
+              {/* <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} /> */}
               <InputComponent
                 label="New Password"
                 type="password"

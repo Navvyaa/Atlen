@@ -1,4 +1,5 @@
 
+// import { EmailProvider } from '../context/EmailContext'; // Adjust the path to where your EmailContext is located
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -6,11 +7,11 @@ interface AuthLayoutProps {
   
   export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
-        <div >
-        <main >
-          {children}
-        </main>
+      // <EmailProvider>
+      <div>
+        <main>{children}</main>
       </div>
+    // </EmailProvider>
     );
   }
   

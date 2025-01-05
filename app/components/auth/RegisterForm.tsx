@@ -1,32 +1,41 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
-import { Box,} from '@mui/material';
-import ButtonComponent from './ButtonComponent';
-import BackButton from './BackButton';
-import InputComponent from './InputComponent';
+import { Box, } from '@mui/material';
+import ButtonComponent from '../ui/ButtonComponent';
+import BackButton from '../ui/BackButton';
+import InputComponent from '../ui/InputComponent';
 import { useRouter } from 'next/navigation';
-import SnackbarComponent, { SnackbarRef } from './SnackbarComponent';
+import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
 import OtpPage from './OtpPage';
-import ModalComponent from './ModalComponent';
+import ModalComponent from '../ui/ModalComponent';
 import Link from 'next/link';
 import LoginModal from './LoginModal';
+import { registerUser } from '../../api/apiClient';
+import { useSearchParams } from 'next/navigation';
+interface RegisterFormProps {
+  // email: string;
+  step: number;
+}
 
-const RegisterForm: React.FC = () => {
+const RegisterForm: React.FC<RegisterFormProps> = ({  step: initialStep }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const searchParams = useSearchParams();
+const email = searchParams.get('email') || '';
+  console.log('email', email);
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
-  const [firstError,setFirstError]=useState<boolean>(false);
-  const [lastError,setLastError]=useState<boolean>(false);
-  const [passError,setPassError]=useState<boolean>(false);
-  const [confirmError,setConfirmError]=useState<boolean>(false);
+  const [firstError, setFirstError] = useState<boolean>(false);
+  const [lastError, setLastError] = useState<boolean>(false);
+  const [passError, setPassError] = useState<boolean>(false);
+  const [confirmError, setConfirmError] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [step, setStep] = useState<number>(1); // 1: Form, 2: OTP Verification
+  const [step, setStep] = useState<number>(initialStep); // 1: Form, 2: OTP Verification
   // const [otp, setOtp] = useState<string>('');
 
   const router = useRouter();
   const snackbarRef = useRef<SnackbarRef>(null);
-  
+
   const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   useEffect(() => {
@@ -35,19 +44,19 @@ const RegisterForm: React.FC = () => {
   }, []);
 
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if ( !password.trim() || !firstName.trim() || !lastName.trim() || !confirmPassword.trim()) {
-      if(!firstName.trim()){
+    if (!password.trim() || !firstName.trim() || !lastName.trim() || !confirmPassword.trim()) {
+      if (!firstName.trim()) {
         setFirstError(true);
       }
-      if(!lastName.trim()){
+      if (!lastName.trim()) {
         setLastError(true);
-      } 
-      if(!password){
+      }
+      if (!password) {
         setPassError(true);
       }
-      if(!confirmPassword){
+      if (!confirmPassword) {
         setConfirmError(true);
       }
       snackbarRef.current?.showSnackbar('Enter all fields.', 'error');
@@ -66,10 +75,14 @@ const RegisterForm: React.FC = () => {
       return;
     }
     // Handle registration logic
-    console.log('Register');
-    snackbarRef.current?.showSnackbar('Registration successful. Please verify your email.', 'success');
-    setStep(2); // Move to OTP verification step
-  };
+    try {
+      const data = await registerUser({ email, password, confirm_password: confirmPassword, first_name: firstName, last_name: lastName });
+      snackbarRef.current?.showSnackbar(data.message, 'success');
+      setStep(2); // Move to OTP verification step
+    } catch (error) {
+      snackbarRef.current?.showSnackbar((error as Error).message, 'error');
+    }
+   };
 
   const handleVerifyOtp = (otp: string) => {
     // Handle OTP verification logic
@@ -99,11 +112,11 @@ const RegisterForm: React.FC = () => {
             <BackButton onBack={() => router.push('/')} />
             <LoginModal step={2} open={false} onClose={function (): void {
               throw new Error('Function not implemented.');
-            } } />            
-              <div className='font-semibold mx-0 px-0 w-[100%] text-2xl text-center mb-6'>
-                Plan. Explore. Travel.
-              </div>
-       
+            }} />
+            <div className='font-semibold mx-0 px-0 w-[100%] text-2xl text-center mb-6'>
+              Plan. Explore. Travel.
+            </div>
+
             <div className='flex flex-row gap-5'>
               <InputComponent
                 label="First Name"
@@ -112,7 +125,7 @@ const RegisterForm: React.FC = () => {
                 error={firstError}
                 onInputChange={() => setFirstError(false)}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
-   
+
               />
               <InputComponent
                 label="Last Name"
@@ -130,7 +143,7 @@ const RegisterForm: React.FC = () => {
               error={passError}
               onInputChange={() => setPassError(false)}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-        
+
             />
             <InputComponent
               label="Confirm Password"
@@ -139,20 +152,20 @@ const RegisterForm: React.FC = () => {
               error={confirmError}
               onInputChange={() => setConfirmError(false)}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
-              
+
             />
             <ButtonComponent type="submit" sx={{ mb: 1, width: '100%', py: 1.5, fontSize: '20px', mt: 3 }}>
               Join
             </ButtonComponent>
-            
+
             <p className='text-neutral-900 text-[14px] text-center mt-8'>
-            By proceeding, you agree to our <Link href=""><span className='underline font-semibold'>Terms of Use</span></Link> and <Link href=''><span className='underline font-semibold'> Privacy Policy</span></Link>.
-          </p>
+              By proceeding, you agree to our <Link href=""><span className='underline font-semibold'>Terms of Use</span></Link> and <Link href=''><span className='underline font-semibold'> Privacy Policy</span></Link>.
+            </p>
           </Box>
-      )}
-      {step === 2 && (
-        <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} />
-      )}
+        )}
+        {step === 2 && (
+          <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} />
+        )}
       </ModalComponent>
     </div >
 

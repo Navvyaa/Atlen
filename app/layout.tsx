@@ -5,8 +5,8 @@ import { ModalProvider } from '@/app/context/ModalContext';
 import { Urbanist } from 'next/font/google'; 
 
 export const metadata: Metadata = {
-  title: "Trippin",
-  description: "Plan your next trip with ease",
+  title: "Atlen",
+  description: "Your companion for effortless travel planning.",
 };
 const urbanist = Urbanist({ subsets: ['latin'] });
 export default function RootLayout({

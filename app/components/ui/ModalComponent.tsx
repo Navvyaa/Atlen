@@ -1,9 +1,7 @@
 "use client";
 import React from 'react';
-import { Modal, Box, IconButton, Tooltip } from '@mui/material';
+import { Modal, Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
-// import CloseIcon from '@mui/icons-material/Close';
-// import { BackButton } from './BackButton';
 
 interface ModalComponentProps {
   children: React.ReactNode;

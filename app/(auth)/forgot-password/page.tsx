@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Navbar from "@/app/components/Navbar";
-import ForgotPasswordForm from "@/app/components/ForgotPasswordForm";
+import ForgotPasswordForm from "@/app/components/auth/ForgotPasswordForm";
 
 import { ModalProvider } from "@/app/context/ModalContext";
 

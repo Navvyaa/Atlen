@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import Navbar from "@/app/components/Navbar";
-import LoginForm from "@/app/components/LoginForm";
+import LoginForm from "../../components/auth/LoginForm";
 
 
 const Login: NextPage = () => {
@@ -9,7 +9,9 @@ const Login: NextPage = () => {
   return (
     <div className="w-full">
       <Navbar />
-      <LoginForm />
+      
+      <LoginForm email={""} />
+     
     </div>
   );
 };
