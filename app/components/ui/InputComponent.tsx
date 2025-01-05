@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {SxProps,TextField} from '@mui/material';
 import {  usePathname } from 'next/navigation';
+import Image from 'next/image';
 interface InputComponentProps {
   label: string;
   type: string;
@@ -100,9 +101,9 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
           style={{ background: 'none', border: 'none', cursor: 'pointer' }}
         >
           {showPassword ? (
-            <img src="/eye-open.svg" alt="Hide" style={{ width: '24px', height: '24px' }} />
+            <Image src="/eye-open.svg" alt="Hide" width={24} height={24} />
           ) : (
-            <img src="/eye-closed.svg" alt="Show" style={{ width: '24px', height: '24px' }} />
+            <Image src="/eye-closed.svg" alt="Show" width={24} height={24} />
           )}
         </button>
       )}
@@ -122,7 +123,7 @@ const InputComponent: React.FC<InputComponentProps> = ({ label, type, placeholde
               <div key={index} className="flex items-center ">
                 {req.check ? (
                   
-                  <img src="./tick.svg" className="mr-1" alt="check" />
+                  <Image src="./tick.svg" className="mr-1" alt="check" width={20} height={20}/>
                 ) : (
                   <div className='mr-2.5 ml-0.5 text-lg text-green-800'>•</div>
                 )}

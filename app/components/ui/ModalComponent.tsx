@@ -2,7 +2,7 @@
 import React from 'react';
 import { Modal, Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
-
+import Image from 'next/image';
 interface ModalComponentProps {
   children: React.ReactNode;
   isOpen: boolean;
@@ -44,7 +44,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ children, isOpen, onClo
           justifyContent: 'center',
         }}
       >
-        <img src="./logo.svg" alt="logo" className=' mb-4 ' />
+        <Image src="./logo.svg" alt="logo" className=' mb-4 ' width={60} height={60} />
         {children}
       </Box>
     </Modal>

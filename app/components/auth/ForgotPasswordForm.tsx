@@ -16,7 +16,7 @@ const ForgotPasswordForm: React.FC = () => {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
-  const [otp, setOtp] = useState<string>('');
+  // const [otp, setOtp] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const snackbarRef = useRef<SnackbarRef>(null);
@@ -25,7 +25,7 @@ const ForgotPasswordForm: React.FC = () => {
 
   useEffect(() => {
     openModal();
-  }, []);
+  }, [openModal]);
 
   const handleCloseModal = () => {
 

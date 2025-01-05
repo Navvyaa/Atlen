@@ -9,9 +9,7 @@ import { useRouter } from 'next/navigation';
 import BackButton from '../ui/BackButton';
 import Link from 'next/link';
 import { checkEmail } from '../../api/apiClient';
-import RegisterForm from './RegisterForm';
-import LoginForm from './LoginForm';
-import axios from 'axios';
+import Image from 'next/image';
 
 
 interface LoginModalProps {
@@ -23,9 +21,7 @@ interface LoginModalProps {
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   // const [isModalOpen, setIsModalOpen] = useState(true);
   const [email, setEmail] = useState<string>('');
-  const [showRegisterForm, setShowRegisterForm] = useState<boolean>(false);
-  const [showLoginForm, setShowLoginForm] = useState<boolean>(false);
-  const [emailError, setEmailError] = useState<boolean>(false);
+   const [emailError, setEmailError] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1); // 1: Initial, 2: Email
   const snackbarRef = useRef<SnackbarRef>(null);
   const router = useRouter();
@@ -116,7 +112,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
               },
             }} onClick={handleGoogleLogin}>
 
-              <img src="./google-icon.svg" className='px-2' alt="" />
+              <Image src="./google-icon.svg" className='px-2' width={45} height={45} alt="" />
               Continue with Google
 
             </ButtonComponent>
@@ -127,7 +123,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
               },
             }} onClick={handleEmailLoginClick}>
               <div className='flex justify-center gap-3 mr-7 w-full'>
-                <img src="./mail.svg" className='px-2' alt="" />
+                <Image src="./mail.svg" width={40} height={40} className='px-2' alt="" />
                 Continue with Mail
               </div>
             </ButtonComponent>

@@ -58,7 +58,7 @@ const LoginForm: React.FC <LoginFormProps>= () => {
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, mx: 2, width: '100%' }}>
             <BackButton />
             <div className='flex flex-col items-center mb-5'>
-              {/* <img src="./logo.svg" alt="logo" className='mb-6' /> */}
+              
               <div className='font-semibold mx-0 px-0 w-[100%] text-2xl text-center mb-2'>
                 Login with Password
               </div>

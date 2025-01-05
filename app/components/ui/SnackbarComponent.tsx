@@ -3,7 +3,7 @@ import { Snackbar, Alert, AlertColor } from '@mui/material';
 import { darken } from '@mui/material/styles';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
-
+import Image from 'next/image';
 interface SnackbarComponentProps {
   message: string;
   severity: AlertColor;
@@ -54,13 +54,13 @@ export interface SnackbarRef {
     const getIcon = (severity: AlertColor) => {
       switch (severity) {
         case 'error':
-          return <img src="./cicleCross.svg" alt="" />;
+          return <Image src="./cicleCross.svg" alt="" width={24} height={24}/>;
         case 'warning':
           return <InfoIcon />;
         case 'info':
           return <WarningIcon />;
         case 'success':
-          return <img src="./circleTick.svg" alt="" />;
+          return <Image src="./circleTick.svg" alt="" width={24} height={24} />;
         default:
           return <InfoIcon />;
       }

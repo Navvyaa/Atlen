@@ -3,7 +3,6 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import "./globals.css";
 import { ModalProvider } from '@/app/context/ModalContext';
 import { Urbanist } from 'next/font/google'; 
-
 export const metadata: Metadata = {
   title: "Atlen",
   description: "Your companion for effortless travel planning.",
