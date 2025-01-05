@@ -87,4 +87,6 @@ export interface SnackbarRef {
     );
   });
   
+  SnackbarComponent.displayName = 'SnackbarComponent';
+
   export default SnackbarComponent;
