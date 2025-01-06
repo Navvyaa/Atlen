@@ -19,21 +19,21 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
-  // const [isModalOpen, setIsModalOpen] = useState(true);
+  
   const [email, setEmail] = useState<string>('');
    const [emailError, setEmailError] = useState<boolean>(false);
-  const [step, setStep] = useState<number>(1); // 1: Initial, 2: Email
+  const [step, setStep] = useState<number>(1);
   const snackbarRef = useRef<SnackbarRef>(null);
   const router = useRouter();
   useEffect(() => {
     if (open) {
       setStep(1);
-      setEmailError(false);// Reset step to 1 when modal is opened
+      setEmailError(false);
     }
   }, [open]);
 
   const handleEmailLoginClick = () => {
-    setStep(2); // Move to email step
+    setStep(2); 
   };
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -53,31 +53,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
     
     try {
       const data = await checkEmail(email);
-    //   if (!data.is_registered && !data.is_verified) {
-    //     setShowRegisterForm(true);
-    //     setStep(1);
-    //   } else if (data.is_registered && !data.is_verified) {
-    //     setShowRegisterForm(true);
-    //     setStep(2);
-    //   } else if (data.is_registered && data.is_verified) {
-    //     setShowLoginForm(true);
-    //   }
-    if (!data.is_registered && !data.is_verified) {
-      router.push(`/register?email=${encodeURIComponent(email)}`);
-    } else if (data.is_registered && !data.is_verified) {
-      router.push(`/verify?email=${encodeURIComponent(email)}`);
-    } else if (data.is_registered && data.is_verified) {
-      router.push(`/login?email=${encodeURIComponent(email)}`);
-    }
+      const { is_registered, is_verified } = data.data;
 
-     
-    //    if (!data.is_registered && !data.is_verified) {
-    //   router.push(`/register`);
-    // } else if (data.is_registered && !data.is_verified) {
-    //   router.push(`/register?step=2`);
-    // } else if (data.is_registered && data.is_verified) {
-    //   router.push(`/login?email=${encodeURIComponent(email)}`);
-    // }
+      if (!is_registered && !is_verified) {
+        router.push(`/register?email=${encodeURIComponent(email)}`);
+      }  else if (is_registered && is_verified) {
+        router.push(`/login?email=${encodeURIComponent(email)}`);
+      }
       onClose();
      
     } catch (error) {
@@ -91,10 +73,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
 
   const handleGoogleLogin = () => {
-    // Handle OAuth login with Google
+   
     console.log('Google OAuth login');
-    // Redirect to dashboard or handle login logic
-    router.push('/dashboard');
+    
   };
   if (!open) return null;
   return (
@@ -161,9 +142,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
           </Box>
         </ModalComponent>
       )}
- {/* {showRegisterForm && <RegisterForm email={email} step={step} />}
-      {showLoginForm && <LoginForm email={email} />}
-     */}
+
     </>
   );
 };

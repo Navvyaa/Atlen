@@ -8,12 +8,17 @@ import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ModalComponent from '../ui/ModalComponent';
-
+import { useSearchParams } from 'next/navigation';
+import {LoginUser } from '../../api/apiClient';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 interface LoginFormProps {
   email:string
 }
 
 const LoginForm: React.FC <LoginFormProps>= () => {
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email') || '';
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
@@ -27,25 +32,48 @@ const LoginForm: React.FC <LoginFormProps>= () => {
     router.push('/');
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit  = async (event: React.FormEvent) => {
     setError(false);
     event.preventDefault();
     if (!password) {
       setError(true);
-      snackbarRef.current?.showSnackbar('Enter all fields', 'error');
-      // setError(false);
+      snackbarRef.current?.showSnackbar('Enter the password', 'error');
+      
       return;
     }
     if (!pwdRegex.test(password)) {
       setError(true);
       snackbarRef.current?.showSnackbar('Invalid Password', 'error');
-      // setError(false);
+     
       return;
     }
-    // Handle login logic
-    console.log('Login');
-    snackbarRef.current?.showSnackbar('Login successful', 'success');
-    handleCloseModal();
+    try {
+      
+      const data = await LoginUser({ email, password });
+
+      if (data.success) {
+        snackbarRef.current?.showSnackbar(data.message, 'success');
+        Cookies.set('accessToken', data.data.access);
+        Cookies.set('refreshToken', data.data.refresh);  
+        setTimeout(() => {
+          router.replace('/dashboard');
+        }, 2000);
+      } else {
+        snackbarRef.current?.showSnackbar(data.message || 'Login failed. Please try again.', 'error');
+      }
+    } catch (error) {
+      
+      if (axios.isAxiosError(error) && error.response) {
+       
+        const errorData = error.response.data;
+       
+        const errorMessage = errorData?.message || 'Failed to login. Please check your credentials and try again.';
+        snackbarRef.current?.showSnackbar(errorMessage, 'error');
+      } else {
+        
+        snackbarRef.current?.showSnackbar('Failed to login.', 'error');
+      }
+      }
   };
 
   return (
@@ -67,10 +95,9 @@ const LoginForm: React.FC <LoginFormProps>= () => {
               label="Password"
               type="password"
               placeholder="Password"
-              // {error?sx={BorderColor:'red'}:{}}
               error={error}
-              onInputChange={() => setError(false)} // Reset error state on input change
-              // sx={{ borderColor: error ? 'red' : 'inherit' }}
+              onInputChange={() => setError(false)} 
+              
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPassword(e.target.value); }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>

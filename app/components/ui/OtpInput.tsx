@@ -5,9 +5,10 @@ interface OTPInputProps {
   onComplete?: (code: string) => void;
   onChange: (otp: string) => void;
   error?:boolean;
+  // onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const OTPInput = ({ length = 6, onComplete,onChange,error }: OTPInputProps) => {
+const OTPInput = ({ length = 6, onComplete,onChange,error  }: OTPInputProps) => {
   const [otp, setOtp] = useState<string[]>(new Array(length).fill(''));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -18,12 +19,12 @@ const OTPInput = ({ length = 6, onComplete,onChange,error }: OTPInputProps) => {
     newOtp[index] = value;
     setOtp(newOtp);
     onChange(newOtp.join(''));
-    // Move to next input if value is entered
+    
     if (value && index < length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
 
-    // Check if OTP is complete
+    
     if (newOtp.every(val => val !== '') && onComplete) {
       onComplete(newOtp.join(''));
     }
@@ -44,9 +45,9 @@ const OTPInput = ({ length = 6, onComplete,onChange,error }: OTPInputProps) => {
   const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text/plain').slice(0, length);
-    
-    if (!/^\d+$/.test(pastedData)) return;
-
+  
+    if (!/^\d+$/.test(pastedData)) return; 
+  
     const newOtp = [...otp];
     pastedData.split('').forEach((value, index) => {
       newOtp[index] = value;
@@ -55,12 +56,13 @@ const OTPInput = ({ length = 6, onComplete,onChange,error }: OTPInputProps) => {
       }
     });
     setOtp(newOtp);
-    inputRefs.current[Math.min(pastedData.length, length - 1)]?.focus();
-
+    onChange(newOtp.join('')); 
+  
     if (newOtp.every(val => val !== '') && onComplete) {
       onComplete(newOtp.join(''));
     }
   };
+  
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
@@ -75,6 +77,7 @@ const OTPInput = ({ length = 6, onComplete,onChange,error }: OTPInputProps) => {
               onChange={e => handleChange(index, e.target.value)}
               onKeyDown={e => handleKeyDown(index, e)}
               onPaste={handlePaste}
+              // onKeyPress={onKeyPress}
               className={`w-full h-12 text-center font-medium rounded-lg bg-neutral-100 focus:border-primary focus:outline-none border text-lg outline-none ${error ? 'border-red-500' : 'border-gray-300'}`}
             />
             {!otp[index] && (

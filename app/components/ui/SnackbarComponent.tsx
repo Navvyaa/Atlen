@@ -54,13 +54,13 @@ export interface SnackbarRef {
     const getIcon = (severity: AlertColor) => {
       switch (severity) {
         case 'error':
-          return <Image src="./cicleCross.svg" alt="" width={24} height={24}/>;
+          return <Image src="./cicleCross.svg" alt="" width={30} height={30}/>;
         case 'warning':
           return <InfoIcon />;
         case 'info':
           return <WarningIcon />;
         case 'success':
-          return <Image src="./circleTick.svg" alt="" width={24} height={24} />;
+          return <Image src="./circleTick.svg" alt="" width={30} height={30} />;
         default:
           return <InfoIcon />;
       }
@@ -74,7 +74,7 @@ export interface SnackbarRef {
         //  action={null}
          icon={getIcon(severity)}
          sx={{
-           width: '340px' ,
+           width: '345px' ,
            maxWidth:'100%',
            fontFamily:'urbanist',
            fontSize:'16px',

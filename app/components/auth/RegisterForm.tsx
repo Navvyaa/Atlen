@@ -10,18 +10,20 @@ import OtpPage from './OtpPage';
 import ModalComponent from '../ui/ModalComponent';
 import Link from 'next/link';
 import LoginModal from './LoginModal';
-import { registerUser } from '../../api/apiClient';
+import { registerUser, verifyOtp } from '../../api/apiClient';
 import { useSearchParams } from 'next/navigation';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 interface RegisterFormProps {
-  // email: string;
+  
   step: number;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({  step: initialStep }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ step: initialStep }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const searchParams = useSearchParams();
-const email = searchParams.get('email') || '';
-  console.log('email', email);
+  const email = searchParams.get('email') || '';
+ 
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [firstError, setFirstError] = useState<boolean>(false);
@@ -30,8 +32,9 @@ const email = searchParams.get('email') || '';
   const [confirmError, setConfirmError] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [step, setStep] = useState<number>(initialStep); // 1: Form, 2: OTP Verification
-  // const [otp, setOtp] = useState<string>('');
+  const [step, setStep] = useState<number>(initialStep); 
+  
+
 
   const router = useRouter();
   const snackbarRef = useRef<SnackbarRef>(null);
@@ -39,7 +42,6 @@ const email = searchParams.get('email') || '';
   const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   useEffect(() => {
-    // openModal();
     snackbarRef.current?.clearSnackbar();
   }, []);
 
@@ -74,31 +76,83 @@ const email = searchParams.get('email') || '';
       snackbarRef.current?.showSnackbar('Passwords do not match.', 'error');
       return;
     }
-    // Handle registration logic
     try {
+
       const data = await registerUser({ email, password, confirm_password: confirmPassword, first_name: firstName, last_name: lastName });
-      snackbarRef.current?.showSnackbar(data.message, 'success');
-      setStep(2); // Move to OTP verification step
+
+      if (data.success) {
+        snackbarRef.current?.showSnackbar(data.message, 'success');
+        setTimeout(() => {
+          setStep(2);
+        }, 1000);
+       
+      } else {
+        snackbarRef.current?.showSnackbar(data.message || 'Registration failed. Please try again.', 'error');
+      }
     } catch (error) {
-      snackbarRef.current?.showSnackbar((error as Error).message, 'error');
+
+      if (axios.isAxiosError(error) && error.response) {
+
+        const errorData = error.response.data;
+
+        const errorMessage = errorData?.message || 'Failed to register. Please check your credentials and try again.';
+        snackbarRef.current?.showSnackbar(errorMessage, 'error');
+      } else {
+
+        snackbarRef.current?.showSnackbar('Failed to register.', 'error');
+      }
     }
-   };
-
-  const handleVerifyOtp = (otp: string) => {
-    // Handle OTP verification logic
-    console.log('OTP Verified:', otp);
-    snackbarRef.current?.showSnackbar('Email verified successfully', 'success');
-    router.push('/'); // Redirect to home page or login page
   };
 
-  const handleResendOtp = () => {
-    // Handle resend OTP logic
-    console.log('Resend OTP');
-    snackbarRef.current?.showSnackbar('OTP resent successfully', 'info');
+  const handleVerifyOtp = async (otp: string) => {
+    try {
+      const data = await verifyOtp({ email, otp, verification_type: 'registration' });
+      if (data.success) {
+        
+        Cookies.set('refreshToken', data.data.refresh, { secure: true });
+        Cookies.set('accessToken', data.data.access , { secure: true });
+        snackbarRef.current?.showSnackbar(data.message, 'success');
+        router.replace('/dashboard');
+      } else {
+        snackbarRef.current?.showSnackbar(data.message, 'error');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage = error.response.data.message || 'Failed to verify OTP. Please try again.';
+        snackbarRef.current?.showSnackbar(errorMessage, 'error');
+      } else {
+        snackbarRef.current?.showSnackbar('Failed to verify OTP. Please try again.', 'error');
+      }
+    }
   };
+const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
+const handleResendOtp = async () => {
+  if (isResendDisabled) {
+    snackbarRef.current?.showSnackbar('Please wait 30 seconds before requesting another OTP.', 'warning');
+    return;
+  }
+
+  try {
+    await registerUser({ email, password, confirm_password: confirmPassword, first_name: firstName, last_name: lastName });
+    snackbarRef.current?.showSnackbar('OTP resent successfully', 'warning');
+    setIsResendDisabled(true);
+    setTimeout(() => {
+      setIsResendDisabled(false);
+    }, 30000); 
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage = error.response.data.message || 'Failed to verify OTP. Please try again.';
+      snackbarRef.current?.showSnackbar(errorMessage, 'error');
+      }
+      else{
+      snackbarRef.current?.showSnackbar('Failed to resend OTP. Please try again.', 'error');
+    }
+  }
+};
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    router.push('/'); // Redirect to home page
+    router.push('/');
   };
 
   return (
@@ -164,7 +218,7 @@ const email = searchParams.get('email') || '';
           </Box>
         )}
         {step === 2 && (
-          <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} />
+          <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} snackbarRef={snackbarRef} isResendDisabled={isResendDisabled}/>
         )}
       </ModalComponent>
     </div >

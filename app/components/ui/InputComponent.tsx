@@ -20,7 +20,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
   placeholder,
   onChange,
   required,
-  sx = {}, // Default to an empty object
+  sx = {}, 
   error,
   onInputChange,
 }) => {
@@ -97,7 +97,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
               },
             }),
           },
-          ...sx, // Spread the `sx` prop from parent
+          ...sx, 
         }}
       />
       {isFocused && type === 'password' && (

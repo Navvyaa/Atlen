@@ -14,7 +14,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ children, isOpen, onClo
 
   const handleBackdropClick = () => {
     onClose();
-    router.push('/'); // Redirect to home page
+    router.push('/'); 
   };
 
   return (

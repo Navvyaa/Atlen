@@ -8,7 +8,8 @@ import BackButton from '../ui/BackButton';
 import OtpPage from './OtpPage';
 import ModalComponent from '../ui/ModalComponent';
 import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
-
+import { forgotPassword, resetPassword, verifyOtp } from '@/app/api/apiClient';
+import axios from 'axios';
 
 const ForgotPasswordForm: React.FC = () => {
   const { isModalOpen, openModal, closeModal } = useModal();
@@ -16,13 +17,13 @@ const ForgotPasswordForm: React.FC = () => {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
-  // const [otp, setOtp] = useState<string>('');
+  const [resetToken, setResetToken] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const snackbarRef = useRef<SnackbarRef>(null);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const router = useRouter();
-
+  
   useEffect(() => {
     openModal();
   }, [openModal]);
@@ -34,7 +35,7 @@ const ForgotPasswordForm: React.FC = () => {
 
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step === 1) {
       if (!email) {
         setEmailError(true);
@@ -46,7 +47,30 @@ const ForgotPasswordForm: React.FC = () => {
         snackbarRef.current?.showSnackbar('Invalid Email', 'error');
         return;
       }
-      setStep(2);
+       try {
+            const data = await forgotPassword({email});
+            if (data.success) {
+              snackbarRef.current?.showSnackbar(data.message, 'success');
+              setTimeout(() => {
+                setStep(2);
+              }, 2000);
+            } else {
+              snackbarRef.current?.showSnackbar(data.message || 'Please try again.', 'error');
+            }
+          } catch (error) {
+            
+            if (axios.isAxiosError(error) && error.response) {
+             
+              const errorData = error.response.data;
+             
+              const errorMessage = errorData?.message || 'User not found. Please check your email and try again.';
+              snackbarRef.current?.showSnackbar(errorMessage, 'error');
+            } else {
+              
+              snackbarRef.current?.showSnackbar('Network Error.', 'error');
+            }
+          }
+         
     } else if (step === 2) {
       // if(!otp){
       //   snackbarRef.current?.showSnackbar('Hold on! We need your OTP to proceed.', 'error');
@@ -61,25 +85,87 @@ const ForgotPasswordForm: React.FC = () => {
       }
       if (newPassword !== confirmPassword) {
         setPasswordError(true);
-        snackbarRef.current?.showSnackbar('Passwords do not match', 'error');
+        snackbarRef.current?.showSnackbar('Looks like a mismatch. Double-check your passwords!', 'error');
         return;
       }
-      snackbarRef.current?.showSnackbar('Password reset successfully', 'success');
-      setTimeout(() => {
-        handleCloseModal();
-      }, 2000);
+     
+      try {
+         
+        const data = await resetPassword({
+          email, new_password: newPassword, confirm_password: confirmPassword,
+          reset_token: resetToken
+        });
+        if (data.success) {
+          snackbarRef.current?.showSnackbar(data.message, 'success');
+          setTimeout(() => {
+            router.push('/');
+          }, 1000);
+        } else {
+          snackbarRef.current?.showSnackbar(data.message || 'Please try again.', 'error');
+        }
+      } catch (error) {
+        
+        if (axios.isAxiosError(error) && error.response) {
+         
+          const errorData = error.response.data;
+         
+          const errorMessage = errorData?.message || 'Password Reset failed. Please try again.';
+          snackbarRef.current?.showSnackbar(errorMessage, 'error');
+        } else {
+          
+          snackbarRef.current?.showSnackbar('Network Error.', 'error');
+        }
+      }
     }
   }
 
-  const handleVerifyOtp = (otp: string) => {
-    console.log('OTP Verified:', otp);
-    setStep(3);
+  const handleVerifyOtp = async (otp: string) => {
+    try {
+      const data = await verifyOtp({ email, otp, verification_type: 'password_reset' });
+      if (data.success) {
+        setResetToken(data.data.reset_token);
+        console.log(resetToken);
+        snackbarRef.current?.showSnackbar(data.message, 'success');
+        setTimeout(() => {
+          setStep(3);
+        }, 2000);
+      } else {
+        snackbarRef.current?.showSnackbar(data.message, 'error');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage = error.response.data.message || 'Failed to verify OTP. Please try again.';
+        snackbarRef.current?.showSnackbar(errorMessage, 'error');
+      } else {
+        snackbarRef.current?.showSnackbar('Failed to verify OTP. Please try again.', 'error');
+      }
+    }
+  
   };
+const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
 
-  const handleResendOtp = () => {
-    console.log('Resend OTP');
-    // snackbarRef.current?.showSnackbar('OTP resent ! Check Your Inbox', 'warning');
-
+  const handleResendOtp = async () => {
+     if (isResendDisabled) {
+        snackbarRef.current?.showSnackbar('Please wait 30 seconds before requesting another OTP.', 'warning');
+        return;
+      }
+    
+      try {
+        await forgotPassword({ email});
+        snackbarRef.current?.showSnackbar('OTP resent successfully', 'warning');
+        setIsResendDisabled(true);
+        setTimeout(() => {
+          setIsResendDisabled(false);
+        }, 30000); 
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+        const errorMessage = error.response.data.message || 'Failed to verify OTP. Please try again.';
+        snackbarRef.current?.showSnackbar(errorMessage, 'error');
+        }
+        else{
+        snackbarRef.current?.showSnackbar('Failed to resend OTP. Please try again.', 'error');
+      }
+      }
   };
 
   return (
@@ -118,7 +204,6 @@ const ForgotPasswordForm: React.FC = () => {
           <>
 
             <div className='w-full '>
-              {/* <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} /> */}
               <InputComponent
                 label="New Password"
                 type="password"
@@ -150,7 +235,7 @@ const ForgotPasswordForm: React.FC = () => {
         {step === 2 && (
           <>
 
-            <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} />
+            <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} snackbarRef={snackbarRef} isResendDisabled={isResendDisabled}/>
           </>
         )}
       </ModalComponent>
