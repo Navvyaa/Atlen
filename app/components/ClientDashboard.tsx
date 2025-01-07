@@ -1,71 +1,58 @@
 "use client";
 
-import React,{useState,useEffect} from 'react';
+import React,{useEffect} from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from "next-auth/react";
 import Cookies from 'js-cookie';
 import ButtonComponent from "../components/ui/ButtonComponent";
 import axios from 'axios';
 
-interface BackendResponse {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-  user: {
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
-}
 
-
-const ClientDashboard: React.FC = () => {
+const ClientDashboard: React.FC<{ accessToken: string }> = ({ accessToken }) => {
   const router = useRouter();
-  const { data: session } = useSession();
-  const [userData, setUserData] = useState<BackendResponse | null>(null);
-
+  
   const handleSignOut = () => {
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
+    // Cookies.remove('next-auth.session-token');
     router.push('/');
   };
-  
+// if (!accessToken) {
   useEffect(() => {
     const fetchUserData = async () => {
+    
+      if (!accessToken) {
+        router.push("/");
+        return;
+      }
+  
       try {
-        const accessToken = Cookies.get("accessToken");
-        const refreshToken = Cookies.get("refreshToken");
-
-        if (!accessToken || !refreshToken) {
-          router.push("/");
-          return;
-        }
-
+        const payload = {
+          client_id: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID,
+          client_secret: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID_SECRET,
+          grant_type: "convert_token",
+          token: accessToken,
+          backend: "google-oauth2",
+        };
+         
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/convert-token`,
+          payload,
           {
-            client_id: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID,
-            client_secret: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID_SECRET,
-            grant_type: "convert_token",
-            auth_token: accessToken, 
-            backend: "google-oauth2",
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
           }
         );
-
-        setUserData(response.data); // Save backend response
+        console.log("Response data:", response.data);
+       
       } catch (error) {
         console.error("Error fetching user data:", error);
-      }
+        router.push("/");
+      } 
     };
-
+  
     fetchUserData();
-  }, [router]);
-
+  }, [accessToken, router]);
+  
+// }
   return (
     <div className="h-screen w-screen ">
       <div className="flex space-y-2">
@@ -75,17 +62,7 @@ const ClientDashboard: React.FC = () => {
         </nav>
       </div>
       <div className="p-4">
-        {userData ? (
-          <div>
-            <h1 className="text-2xl font-bold">Welcome, {userData.user.first_name}</h1>
-            <p>Email: {userData.user.email}</p>
-            <p>
-              Full Name: {userData.user.first_name} {userData.user.last_name}
-            </p>
-          </div>
-        ) : (
-          <p>Loading user data...</p>
-        )}
+  
       </div>
     </div>
   );

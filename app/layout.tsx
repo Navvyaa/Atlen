@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import "./globals.css";
+import ClientSessionProvider from "./components/ClientSessionProvider";
 import { ModalProvider } from '@/app/context/ModalContext';
 import { Urbanist } from 'next/font/google'; 
 export const metadata: Metadata = {
@@ -8,6 +9,8 @@ export const metadata: Metadata = {
   description: "Your companion for effortless travel planning.",
 };
 const urbanist = Urbanist({ subsets: ['latin'] });
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,7 +24,9 @@ export default function RootLayout({
       <body className={urbanist.className}>
       <AppRouterCacheProvider>
       <ModalProvider>
+      <ClientSessionProvider >
         {children}
+        </ClientSessionProvider>
         </ModalProvider>
       </AppRouterCacheProvider>
       </body>

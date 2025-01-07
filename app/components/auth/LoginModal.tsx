@@ -11,21 +11,8 @@ import Link from 'next/link';
 import { checkEmail } from '../../api/apiClient';
 import Image from 'next/image';
 import { signIn } from "next-auth/react";
-// import axios from 'axios';
-
-
-interface AuthResponse {
-  access_token: string;
-  expires_in: number;
-  token_type: string;
-  scope: string;
-  refresh_token: string;
-  user: {
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
-}
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 interface LoginModalProps {
   open: boolean;
@@ -86,13 +73,38 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
       }
     }
   };
-// const [isLoading, setIsLoading] = useState<boolean>(false);
 
+
+// const handleGoogleSignIn = async () => {
+//   await signIn("google");
+// };
 const handleGoogleSignIn = async () => {
-  await signIn("google"); // Initiates Google OAuth flow
+  try {
+    const result = await signIn("google", {
+      callbackUrl: "/dashboard",
+      redirect: false,
+    });
+
+    if (result?.error) {
+      console.error(result.error);
+    } else {
+      const sessionResponse = await axios.get("/api/auth/session");
+      const session = sessionResponse.data;
+
+      if (session?.accessToken) {
+        Cookies.set("accessToken", session.accessToken, { secure: true });
+        router.push("/dashboard");
+      } else {
+        console.error("Access token is missing in the session:", session);
+      }
+    }
+  } catch (error) {
+    console.error("Google login error:", error);
+  }
 };
 
-  if (!open) return null;
+
+if (!open) return null;
   return (
     <>
       {step === 1 && (
