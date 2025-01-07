@@ -10,7 +10,22 @@ import BackButton from '../ui/BackButton';
 import Link from 'next/link';
 import { checkEmail } from '../../api/apiClient';
 import Image from 'next/image';
+import { signIn } from "next-auth/react";
+// import axios from 'axios';
 
+
+interface AuthResponse {
+  access_token: string;
+  expires_in: number;
+  token_type: string;
+  scope: string;
+  refresh_token: string;
+  user: {
+    email: string;
+    first_name: string;
+    last_name: string;
+  };
+}
 
 interface LoginModalProps {
   open: boolean;
@@ -19,7 +34,8 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
-  
+ 
+
   const [email, setEmail] = useState<string>('');
    const [emailError, setEmailError] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
@@ -70,13 +86,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
       }
     }
   };
+// const [isLoading, setIsLoading] = useState<boolean>(false);
 
+const handleGoogleSignIn = async () => {
+  await signIn("google"); // Initiates Google OAuth flow
+};
 
-  const handleGoogleLogin = () => {
-   
-    console.log('Google OAuth login');
-    
-  };
   if (!open) return null;
   return (
     <>
@@ -91,7 +106,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
               fontSize: "18px", mt: 0, mb: 2, p: 1, width: '100%', color: "#3d3d3d", backgroundColor: 'white', border: '1px solid gray', '&:hover': {
                 backgroundColor: '#f0f0f0',
               },
-            }} onClick={handleGoogleLogin}>
+            }} onClick={handleGoogleSignIn}>
 
               <Image src="./google-icon.svg" className='px-2' width={45} height={45} alt="" />
               Continue with Google

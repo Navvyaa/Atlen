@@ -2,7 +2,9 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'https://trippin-73nt.onrender.com/api', // Replace with your API base URL
+    // baseURL: 'https://trippin-73nt.onrender.com/api', // Replace with your API base URL
+//    baseURL: '${process.env.NEXT_PUBLIC_BACKEND_URL}/api',
+baseURL: process.env.NEXT_PUBLIC_BACKEND_URL + '/api',
     headers: {
         'Content-Type': 'application/json',
     },
