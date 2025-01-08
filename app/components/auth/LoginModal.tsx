@@ -7,12 +7,14 @@ import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
 import ModalComponent from '../ui/ModalComponent';
 import { useRouter } from 'next/navigation';
 import BackButton from '../ui/BackButton';
+import { useDispatch } from 'react-redux';
 import Link from 'next/link';
-import { checkEmail } from '../../api/apiClient';
 import Image from 'next/image';
 import { signIn } from "next-auth/react";
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { checkEmail } from '@/app/features/auth/slices/authThunk';
+import { AppDispatch } from '@/app/store/store';
 
 interface LoginModalProps {
   open: boolean;
@@ -21,7 +23,7 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
- 
+ const dispatch = useDispatch<AppDispatch>();
 
   const [email, setEmail] = useState<string>('');
    const [emailError, setEmailError] = useState<boolean>(false);
@@ -40,8 +42,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   };
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+  const [loading, setLoading] = useState<boolean>(false);
   const handleContinueWithEmail = async () => {
+  
     if (!email) {
       setEmailError(true);
       snackbarRef.current?.showSnackbar('Please enter a Email', 'error');
@@ -53,25 +56,22 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
       return;
     }
     setEmailError(false);
-    
-    try {
-      const data = await checkEmail(email);
-      const { is_registered, is_verified } = data.data;
+    setLoading(true);
 
-      if (!is_registered && !is_verified) {
-        router.push(`/register?email=${encodeURIComponent(email)}`);
-      }  else if (is_registered && is_verified) {
-        router.push(`/login?email=${encodeURIComponent(email)}`);
-      }
-      onClose();
-     
-    } catch (error) {
-      if (error instanceof Error) {
-        snackbarRef.current?.showSnackbar(error.message, 'error');
-      } else {
-        snackbarRef.current?.showSnackbar('An unknown error occurred', 'error');
-      }
+  try {
+    const response = await dispatch(checkEmail({ email })).unwrap();
+   
+    if (!response.data.is_registered) {
+      router.push(`/register`);
+    } else if (response.data.is_registered && response.data.is_verified) {
+      router.push(`/login`);
     }
+    onClose();
+  } catch (error: any) {
+    snackbarRef.current?.showSnackbar(error.message || 'An unknown error occurred', 'error');
+  } finally {
+    setLoading(false);
+  }
   };
 
 
@@ -92,7 +92,8 @@ const handleGoogleSignIn = async () => {
       const session = sessionResponse.data;
 
       if (session?.accessToken) {
-        Cookies.set("accessToken", session.accessToken, { secure: true });
+        Cookies.set("accessToken", session.accessToken);
+        // Cookies.set("accessToken", session.accessToken, { secure: true });
         router.push("/dashboard");
       } else {
         console.error("Access token is missing in the session:", session);
@@ -107,8 +108,9 @@ const handleGoogleSignIn = async () => {
 if (!open) return null;
   return (
     <>
-      {step === 1 && (
         <ModalComponent isOpen={open} onClose={onClose}>
+      {step === 1 && (
+        <>
           <Box sx={{ mt: 0, mx: 2, width: '100%' }}>
 
             <p className='font-semibold text-2xl text-center mb-16'>
@@ -140,10 +142,12 @@ if (!open) return null;
               By proceeding, you agree to our <Link href=""><span className='underline font-semibold'>Terms of Use</span></Link> and <Link href=''><span className='underline font-semibold'> Privacy Policy</span></Link>.
             </p>
           </Box>
-        </ModalComponent>
+        
+        </>
       )}
       {step === 2 && (
-        <ModalComponent isOpen={open} onClose={onClose}>
+        <>
+        
           <BackButton onBack={() => setStep(1)} />
           <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
           <Box sx={{ mt: 2, mx: 2, width: '100%' }}>
@@ -160,15 +164,16 @@ if (!open) return null;
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             />
             <ButtonComponent onClick={handleContinueWithEmail} sx={{ mb: 7, mt: 2, width: '100%', py: 1.5, fontSize: '20px' }}>
-              Continue
+              {loading? "loading":"Continue"}
             </ButtonComponent>
             <p className='text-neutral-900 text-[14px] text-center '>
               By proceeding, you agree to our <Link href=""><span className='underline font-semibold'>Terms of Use</span></Link> and <Link href=''><span className='underline font-semibold'> Privacy Policy</span></Link>.
             </p>
           
           </Box>
-        </ModalComponent>
+          </>
       )}
+      </ModalComponent>
 
     </>
   );

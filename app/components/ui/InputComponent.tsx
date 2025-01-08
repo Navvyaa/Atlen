@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 interface InputComponentProps {
   label: string;
+  value?: string;
   type: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -16,6 +17,7 @@ interface InputComponentProps {
 
 const InputComponent: React.FC<InputComponentProps> = ({
   label,
+  value,
   type,
   placeholder,
   onChange,
@@ -62,6 +64,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
         type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
         variant="outlined"
         fullWidth
+        value={value}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
           setIsFocused(false);
@@ -70,7 +73,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
         placeholder={placeholder}
         onChange={handlePasswordChange}
         required={required}
-        inputProps={type === 'password' ? { maxLength: 20 } : {}}
+        inputProps={type === 'password' ? { maxLength: 20 } : {maxLength: 50}}
         error={error}
         sx={{
           '& .MuiOutlinedInput-root': {

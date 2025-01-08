@@ -8,31 +8,37 @@ import BackButton from '../ui/BackButton';
 import OtpPage from './OtpPage';
 import ModalComponent from '../ui/ModalComponent';
 import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
-import { forgotPassword, resetPassword, verifyOtp } from '@/app/api/apiClient';
-import axios from 'axios';
+import { RootState } from '@/app/store/store';
+import { forgotPassword, resetPassword, verifyOtp } from '@/app/features/auth/slices/authThunk';
+import { AppDispatch } from '@/app/store/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ForgotPasswordForm: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const initialEmail = useSelector((state: RootState) => state.auth.email);
   const { isModalOpen, openModal, closeModal } = useModal();
   const [step, setStep] = useState<number>(1);
+  const [email, setEmail] = useState<string>(initialEmail || '');
   const [emailError, setEmailError] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
   const [resetToken, setResetToken] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const snackbarRef = useRef<SnackbarRef>(null);
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const router = useRouter();
-  
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
+  let countdownInterval: NodeJS.Timeout | null = null; // Use a global interval reference
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   useEffect(() => {
     openModal();
   }, [openModal]);
 
   const handleCloseModal = () => {
-
     closeModal();
     router.push('/');
-
   };
 
   const handleNextStep = async () => {
@@ -47,37 +53,26 @@ const ForgotPasswordForm: React.FC = () => {
         snackbarRef.current?.showSnackbar('Invalid Email', 'error');
         return;
       }
-       try {
-            const data = await forgotPassword({email});
-            if (data.success) {
-              snackbarRef.current?.showSnackbar(data.message, 'success');
-              setTimeout(() => {
-                setStep(2);
-              }, 2000);
-            } else {
-              snackbarRef.current?.showSnackbar(data.message || 'Please try again.', 'error');
-            }
-          } catch (error) {
-            
-            if (axios.isAxiosError(error) && error.response) {
-             
-              const errorData = error.response.data;
-             
-              const errorMessage = errorData?.message || 'User not found. Please check your email and try again.';
-              snackbarRef.current?.showSnackbar(errorMessage, 'error');
-            } else {
-              
-              snackbarRef.current?.showSnackbar('Network Error.', 'error');
-            }
-          }
-         
-    } else if (step === 2) {
-      // if(!otp){
-      //   snackbarRef.current?.showSnackbar('Hold on! We need your OTP to proceed.', 'error');
-      //   return;
-      // }
+      setLoading(true);
+      try {
+        const response = await dispatch(forgotPassword({ email })).unwrap();
+        
+        snackbarRef.current?.showSnackbar(response.message, 'success');
+        setTimeout(() => {
+          setStep(2);
+        }, 1000);
+      } catch (error: any) {
+        snackbarRef.current?.showSnackbar(error.response?.data?.message || 'An unknown error occurred', 'error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    else if (step === 2) {
       setStep(3);
-    } else if (step === 3) {
+    }
+
+    else if (step === 3) {
       if (!newPassword.trim() || !confirmPassword.trim()) {
         setPasswordError(true);
         snackbarRef.current?.showSnackbar('Please enter the passwords to proceed', 'error');
@@ -88,100 +83,89 @@ const ForgotPasswordForm: React.FC = () => {
         snackbarRef.current?.showSnackbar('Looks like a mismatch. Double-check your passwords!', 'error');
         return;
       }
-     
+      setLoading(true);
       try {
-         
-        const data = await resetPassword({
-          email, new_password: newPassword, confirm_password: confirmPassword,
-          reset_token: resetToken
-        });
-        if (data.success) {
-          snackbarRef.current?.showSnackbar(data.message, 'success');
-          setTimeout(() => {
-            router.push('/');
-          }, 1000);
-        } else {
-          snackbarRef.current?.showSnackbar(data.message || 'Please try again.', 'error');
-        }
-      } catch (error) {
-        
-        if (axios.isAxiosError(error) && error.response) {
-         
-          const errorData = error.response.data;
-         
-          const errorMessage = errorData?.message || 'Password Reset failed. Please try again.';
-          snackbarRef.current?.showSnackbar(errorMessage, 'error');
-        } else {
-          
-          snackbarRef.current?.showSnackbar('Network Error.', 'error');
-        }
+        const response = await dispatch(resetPassword({ email, new_password: newPassword, confirm_password: confirmPassword, reset_token: resetToken })).unwrap();
+     
+        snackbarRef.current?.showSnackbar(response.message, 'success');
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      } catch (error: any) {
+        snackbarRef.current?.showSnackbar(error.response?.data?.message || 'An unknown error occurred', 'error');
+      } finally {
+        setLoading(false);
       }
     }
-  }
+  };
 
   const handleVerifyOtp = async (otp: string) => {
+    setLoading(true);
     try {
-      const data = await verifyOtp({ email, otp, verification_type: 'password_reset' });
-      if (data.success) {
-        setResetToken(data.data.reset_token);
-        console.log(resetToken);
-        snackbarRef.current?.showSnackbar(data.message, 'success');
+      if (email) {
+        const response = await dispatch(verifyOtp({ email, otp, verification_type: 'password_reset' })).unwrap();
+       
+        snackbarRef.current?.showSnackbar("Email verified successfully!", 'success');
+        setResetToken(response.data?.reset_token || '');
         setTimeout(() => {
-          setStep(3);
-        }, 2000);
+        setStep(3);
+        },1000);
       } else {
-        snackbarRef.current?.showSnackbar(data.message, 'error');
+        snackbarRef.current?.showSnackbar('Email is required to verify OTP.', 'error');
       }
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const errorMessage = error.response.data.message || 'Failed to verify OTP. Please try again.';
-        snackbarRef.current?.showSnackbar(errorMessage, 'error');
-      } else {
-        snackbarRef.current?.showSnackbar('Failed to verify OTP. Please try again.', 'error');
-      }
+    } catch (error: any) {
+      snackbarRef.current?.showSnackbar(error.response?.data?.message || 'An unknown error occurred', 'error');
+    } finally {
+      setLoading(false);
     }
-  
   };
-const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
+
 
   const handleResendOtp = async () => {
-     if (isResendDisabled) {
-        snackbarRef.current?.showSnackbar('Please wait 30 seconds before requesting another OTP.', 'warning');
-        return;
-      }
-    
-      try {
-        await forgotPassword({ email});
-        snackbarRef.current?.showSnackbar('OTP resent successfully', 'warning');
-        setIsResendDisabled(true);
-        setTimeout(() => {
-          setIsResendDisabled(false);
-        }, 30000); 
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-        const errorMessage = error.response.data.message || 'Failed to verify OTP. Please try again.';
-        snackbarRef.current?.showSnackbar(errorMessage, 'error');
+    if (isResendDisabled) {
+     
+      snackbarRef.current?.showSnackbar(`Please wait ${remainingTime} seconds before requesting another OTP.`, 'warning');
+      return; 
+    }
+    try {
+      setIsResendDisabled(true);
+      setRemainingTime(30);
+
+      if (countdownInterval) clearInterval(countdownInterval); 
+    countdownInterval = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(countdownInterval!); 
+          setIsResendDisabled(false); 
+          return 0;
         }
-        else{
-        snackbarRef.current?.showSnackbar('Failed to resend OTP. Please try again.', 'error');
-      }
-      }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+      await dispatch(forgotPassword({ email })).unwrap();
+      snackbarRef.current?.showSnackbar("OTP resent successfully", 'success');
+    } catch  {
+      snackbarRef.current?.showSnackbar('An error occurred! Please try again', 'error');
+    }
   };
 
+
+  
   return (
     <div className={isModalOpen ? 'blur-background' : ''}>
       <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal}>
-
         {step === 1 ? <BackButton /> : step === 2 ? <BackButton onBack={() => setStep(1)} /> : null}
 
         <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
 
-        {step != 2 && (<>
-          <p className='font-semibold mx-0 px-0 text-2xl text-center mb-4'>
-            {step === 1 && 'Forgot Your Password?'}
-            {step === 3 && 'Reset Password'}
-          </p>
-        </>
+        {step !== 2 && (
+          <>
+            <p className='font-semibold mx-0 px-0 text-2xl text-center mb-4'>
+              {step === 1 && 'Forgot Your Password?'}
+              {step === 3 && 'Reset Password'}
+            </p>
+          </>
         )}
         {step === 1 && (
           <>
@@ -193,7 +177,8 @@ const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
                 error={emailError}
                 onInputChange={() => setEmailError(false)}
                 sx={{ mb: 2, py: 3, width: '100%' }}
-                placeholder="Email"
+                placeholder="Enter your email"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -202,7 +187,6 @@ const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
 
         {step === 3 && (
           <>
-
             <div className='w-full '>
               <InputComponent
                 label="New Password"
@@ -219,23 +203,20 @@ const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
                 onInputChange={() => setPasswordError(false)}
                 placeholder="Confirm new password"
                 onChange={(e) => setConfirmPassword(e.target.value)}
-
               />
             </div>
           </>
         )}
 
         {step !== 2 && (
-          <ButtonComponent onClick={handleNextStep} sx={{ my: 3, width: '100%', py: 1.5, fontSize: '20px' }}>
-            {step === 1 && 'Send OTP'}
-            {step === 3 && 'Done'}
-          </ButtonComponent>
+            <ButtonComponent onClick={handleNextStep} sx={{ my: 3, width: '100%', py: 1.5, fontSize: '20px' }} disabled={loading}>
+            {loading ? 'Loading...' : step === 1 ? 'Send OTP' : 'Done'}
+            </ButtonComponent>
         )}
 
         {step === 2 && (
           <>
-
-            <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} snackbarRef={snackbarRef} isResendDisabled={isResendDisabled}/>
+            <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} snackbarRef={snackbarRef} isResendDisabled={isResendDisabled} />
           </>
         )}
       </ModalComponent>

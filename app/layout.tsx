@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import "./globals.css";
-import ClientSessionProvider from "./components/ClientSessionProvider";
+import { ReduxProvider } from "./providers/ReduxProvider";
+import ClientSessionProvider from "./providers/ClientSessionProvider";
 import { ModalProvider } from '@/app/context/ModalContext';
 import { Urbanist } from 'next/font/google'; 
 export const metadata: Metadata = {
@@ -25,7 +26,9 @@ export default function RootLayout({
       <AppRouterCacheProvider>
       <ModalProvider>
       <ClientSessionProvider >
+        <ReduxProvider >
         {children}
+        </ReduxProvider>
         </ClientSessionProvider>
         </ModalProvider>
       </AppRouterCacheProvider>

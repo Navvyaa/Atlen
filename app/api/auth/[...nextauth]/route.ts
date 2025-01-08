@@ -1,6 +1,18 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
+import { JWT, Session } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 
+// Define the token type
+interface CustomToken extends JWT {
+  accessToken?: string;
+}
+
+interface CustomSession extends Session {
+  accessToken?: string;
+}
+
+// Define the authOptions type explicitly to conform with NextAuthOptions
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -9,13 +21,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }: { token: any, account?: any }) {
+    async jwt({ token, account }: { token: CustomToken; account?: any }) {
       if (account) {
         token.accessToken = account.access_token; // Save Google access token
       }
       return token;
     },
-    async session({ session, token }: { session: any, token: any }) {
+    async session({ session, token }: { session: CustomSession; token: CustomToken }) {
       session.accessToken = token.accessToken; // Add token to session
       return session;
     },

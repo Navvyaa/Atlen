@@ -8,33 +8,46 @@ import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ModalComponent from '../ui/ModalComponent';
-import { useSearchParams } from 'next/navigation';
-import {LoginUser } from '../../api/apiClient';
+import { RootState } from '@/app/store/store';
+import { login } from '@/app/features/auth/slices/authThunk';
+import { AppDispatch } from '@/app/store/store';
+import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 interface LoginFormProps {
   email:string
 }
 
 const LoginForm: React.FC <LoginFormProps>= () => {
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email') || '';
+  const dispatch = useDispatch<AppDispatch>();
+ 
+  const email = useSelector((state: RootState) => state.auth.email);
+  // const email = searchParams.get('email') || '';
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const snackbarRef = useRef<SnackbarRef>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-
+ 
   const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     router.push('/');
   };
-
+ 
   const handleSubmit  = async (event: React.FormEvent) => {
     setError(false);
     event.preventDefault();
+    if(email==="null" || email===null){
+   
+      snackbarRef.current?.showSnackbar('Enter a email first', 'warning');
+      setTimeout(() => {
+      router.push('/');
+      }, 2000);
+      return;
+    }
+
     if (!password) {
       setError(true);
       snackbarRef.current?.showSnackbar('Enter the password', 'error');
@@ -47,39 +60,26 @@ const LoginForm: React.FC <LoginFormProps>= () => {
      
       return;
     }
-    try {
-      
-      const data = await LoginUser({ email, password });
 
-      if (data.success) {
-        snackbarRef.current?.showSnackbar(data.message, 'success');
-        Cookies.set('accessToken', data.data.access);
-        Cookies.set('refreshToken', data.data.refresh);  
-        setTimeout(() => {
-          router.replace('/dashboard');
-        }, 2000);
-      } else {
-        snackbarRef.current?.showSnackbar(data.message || 'Login failed. Please try again.', 'error');
-      }
-    } catch (error) {
+  setLoading(true);
+    try {
+        const response = await dispatch(login({ email,password })).unwrap();
       
-      if (axios.isAxiosError(error) && error.response) {
-       
-        const errorData = error.response.data;
-       
-        const errorMessage = errorData?.message || 'Failed to login. Please check your credentials and try again.';
-        snackbarRef.current?.showSnackbar(errorMessage, 'error');
-      } else {
-        
-        snackbarRef.current?.showSnackbar('Failed to login.', 'error');
-      }
+        Cookies.set('accessToken', response.data.access);
+        Cookies.set('refreshToken', response.data.refresh);
+        snackbarRef.current?.showSnackbar(response.message, 'success');
+        router.replace('/dashboard');
+      } catch (error: any) {
+        snackbarRef.current?.showSnackbar(error.response.data.message || 'An unknown error occurred', 'error');
+      } finally {
+        setLoading(false);
       }
   };
 
   return (
     <>
 
-      <div className={isModalOpen ? 'blur-background' : ''}>
+      <div className={isModalOpen  ? 'blur-background' : ''}>
         <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal}>
 
           <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
@@ -108,7 +108,7 @@ const LoginForm: React.FC <LoginFormProps>= () => {
               </Link>
             </Box>
             <ButtonComponent onClick={handleSubmit} type="submit" sx={{ mb: 7, mt: 2, width: '100%', py: 1.5, fontSize: '20px' }}>
-              Continue
+              {loading?"loading":"Continue"}
             </ButtonComponent>
 
             <p className='text-neutral-900 text-[14px] text-center '>

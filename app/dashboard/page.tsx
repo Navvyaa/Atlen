@@ -6,7 +6,6 @@ export default async function Dashboard() {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken');
     // const refreshToken = cookieStore.get('refreshToken');
-    // const sessionToken = cookieStore.get('next-auth.session-token');
   if (!accessToken ) {
     redirect('/');
   }

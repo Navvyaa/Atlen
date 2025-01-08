@@ -1,10 +1,9 @@
 "use client";
 
-import React,{useEffect} from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import ButtonComponent from "../components/ui/ButtonComponent";
-import axios from 'axios';
 
 
 const ClientDashboard: React.FC<{ accessToken: string }> = ({ accessToken }) => {
@@ -16,41 +15,44 @@ const ClientDashboard: React.FC<{ accessToken: string }> = ({ accessToken }) => 
     // Cookies.remove('next-auth.session-token');
     router.push('/');
   };
-// if (!accessToken) {
-  useEffect(() => {
-    const fetchUserData = async () => {
+if (!accessToken) {
+  console.log("No access token");
+  // router.push("/");
+}
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
     
-      if (!accessToken) {
-        router.push("/");
-        return;
-      }
+  //     if (!accessToken) {
+  //       router.push("/");
+  //       return;
+  //     }
   
-      try {
-        const payload = {
-          client_id: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID,
-          client_secret: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID_SECRET,
-          grant_type: "convert_token",
-          token: accessToken,
-          backend: "google-oauth2",
-        };
+  //     try {
+  //       const payload = {
+  //         client_id: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID,
+  //         client_secret: process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID_SECRET,
+  //         grant_type: "convert_token",
+  //         token: accessToken,
+  //         backend: "google-oauth2",
+  //       };
          
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/convert-token`,
-          payload,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        console.log("Response data:", response.data);
+  //       const response = await axios.post(
+  //         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/convert-token`,
+  //         payload,
+  //         {
+  //           headers: { "Content-Type": "application/json" },
+  //         }
+  //       );
+  //       console.log("Response data:", response.data);
        
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        router.push("/");
-      } 
-    };
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //       router.push("/");
+  //     } 
+  //   };
   
-    fetchUserData();
-  }, [accessToken, router]);
+  //   fetchUserData();
+  // }, [accessToken, router]);
   
 // }
   return (
