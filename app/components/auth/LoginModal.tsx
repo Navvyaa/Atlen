@@ -74,7 +74,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   }
   };
 
-
+//handling google login
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => handleGoogleSuccess(tokenResponse),
     onError: () => console.error('Login Failed'),
