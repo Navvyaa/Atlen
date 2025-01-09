@@ -75,42 +75,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   };
 
 
-// const handleGoogleSignIn = async () => {
-//   await signIn("google");
-// };
-// const handleGoogleSignIn = async () => {
-  
-
-  // const handleGoogleSuccess = async (credentialResponse: any) => {
-  //   const token = credentialResponse.credential; // JWT Token from Google
-  //   console.log('Google OAuth Token:', token);
-  
-  //   try {
-  //     // Dispatch action to send token to your backend
-  //     const response = await dispatch(sendGoogleOAuthTokenToBackend(token)).unwrap();
-  //     console.log('Google OAuth Response:', response);
-  
-  //     if (response?.data?.access_token && response?.data.access_token) {
-  //       Cookies.set("acessToken",response?.data?.access_token);
-  //       Cookies.set("refreshToken",response?.data?.refresh_token);
-        
-  //       router.push('/dashboard'); // Navigate to dashboard
-  //     } else {
-  //       router.push('/'); // Navigate to registration if not registered
-  //     }
-  //     snackbarRef.current?.showSnackbar('Login Successful', 'success');
-  //   } catch (error: any) {
-  //     console.error('Google Login Error:', error.message);
-  //     snackbarRef.current?.showSnackbar(error.message || 'An error occurred during Google Login', 'error');
-  //   }
-  // };
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => handleGoogleSuccess(tokenResponse),
     onError: () => console.error('Login Failed'),
   });
   const handleGoogleSuccess = async (credentialResponse: any) => {
-    console.log('Google OAuth Credential:', credentialResponse); 
-    console.log('Google OAuth Access Token:', credentialResponse.access_token); 
     const token = credentialResponse.access_token; // Google OAuth token
     if (!token) {
       snackbarRef.current?.showSnackbar('Google authentication failed! ', 'error');
@@ -120,11 +89,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
     try {
       // Send the token to the backend
       const response = await dispatch(sendGoogleOAuthTokenToBackend(token)).unwrap();
-      console.log('Google OAuth Response:', response);
-      console.log('Google OAuth Response:', response.access_token);
-  
+      
       if (response?.access_token) {
-        console.log(response?.access_token)
         Cookies.set("accessToken", response?.access_token);
         Cookies.set("refreshToken", response?.refresh_token);
         router.push('/dashboard');

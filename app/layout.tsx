@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import "./globals.css";
 import { ReduxProvider } from "./providers/ReduxProvider";
-import ClientSessionProvider from "./providers/ClientSessionProvider";
 import { ModalProvider } from '@/app/context/ModalContext';
 import { Urbanist } from 'next/font/google'; 
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -27,14 +26,12 @@ export default function RootLayout({
       <body className={urbanist.className}>
       <AppRouterCacheProvider>
       <ModalProvider>
-      <ClientSessionProvider >
+      
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID || ''}>
         <ReduxProvider >
         {children}
         </ReduxProvider>
         </GoogleOAuthProvider>
-        </ClientSessionProvider>
-      
         </ModalProvider>
       </AppRouterCacheProvider>
       </body>
