@@ -1,13 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { checkEmail, login, register, verifyOtp } from './authThunk';
+import { checkEmail, login, register, sendGoogleOAuthTokenToBackend, verifyOtp } from './authThunk';
+import { googleOAuthResponse } from '../types';
+import Cookies from 'js-cookie';
 
 interface Tokens {
   access_token: string;
   refresh_token: string;
 }
 
+interface User {
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
 const initialState = {
-  user: null,
+  user: null as User | null,
   email: null as string | null,
   tokens: null as Tokens | null,
   emailStatus: null,
@@ -42,7 +50,7 @@ const authSlice = createSlice({
           state.loading = false;
           if (action.type === checkEmail.fulfilled.type) {
            
-            state.email = action.payload.data.email; // Save email for later use
+            state.email = action.payload.data.email; 
             state.emailStatus = action.payload.data;
           } else if (action.type === login.fulfilled.type) {
             state.tokens = {
@@ -58,6 +66,19 @@ const authSlice = createSlice({
               access_token: action.payload.data.access_token,
               refresh_token: action.payload.data.refresh_token,
             };
+            if (action.type === sendGoogleOAuthTokenToBackend.fulfilled.type) {
+              // Store tokens and user data
+              const payload = action.payload as unknown as googleOAuthResponse;
+              state.tokens = {
+                access_token:payload.access_token,
+                refresh_token:payload.refresh_token,
+              };
+              state.user = payload.user;
+              console.log("Google payload :",payload);
+              // Save tokens to localStorage
+              Cookies.set('accessToken',payload.access_token);
+              Cookies.set('refreshToken', payload.refresh_token);
+            }
           }
         }
       )

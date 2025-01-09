@@ -5,6 +5,8 @@ import { ReduxProvider } from "./providers/ReduxProvider";
 import ClientSessionProvider from "./providers/ClientSessionProvider";
 import { ModalProvider } from '@/app/context/ModalContext';
 import { Urbanist } from 'next/font/google'; 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 export const metadata: Metadata = {
   title: "Atlen",
   description: "Your companion for effortless travel planning.",
@@ -26,10 +28,13 @@ export default function RootLayout({
       <AppRouterCacheProvider>
       <ModalProvider>
       <ClientSessionProvider >
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_AUTH_GOOGLE_CLIENT_ID || ''}>
         <ReduxProvider >
         {children}
         </ReduxProvider>
+        </GoogleOAuthProvider>
         </ClientSessionProvider>
+      
         </ModalProvider>
       </AppRouterCacheProvider>
       </body>

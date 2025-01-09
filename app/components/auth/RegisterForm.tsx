@@ -229,7 +229,7 @@ const handleResendOtp = async () => {
 
             />
             <ButtonComponent type="submit" sx={{ mb: 1, width: '100%', py: 1.5, fontSize: '20px', mt: 3 }}>
-              {loading? "loading":"Join"}
+              {loading? "Loading..":"Join"}
             </ButtonComponent>
 
             <p className='text-neutral-900 text-[14px] text-center mt-8'>

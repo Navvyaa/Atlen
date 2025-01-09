@@ -108,7 +108,7 @@ const LoginForm: React.FC <LoginFormProps>= () => {
               </Link>
             </Box>
             <ButtonComponent onClick={handleSubmit} type="submit" sx={{ mb: 7, mt: 2, width: '100%', py: 1.5, fontSize: '20px' }}>
-              {loading?"loading":"Continue"}
+              {loading?"Loading...":"Continue"}
             </ButtonComponent>
 
             <p className='text-neutral-900 text-[14px] text-center '>

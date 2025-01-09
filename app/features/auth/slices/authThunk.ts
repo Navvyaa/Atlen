@@ -15,6 +15,8 @@ import {
   resetPasswordResponse,
   refreshTokenRequest,
   refreshTokenResponse,
+  googleOAuthResponse,
+
 } from '../types';
 import * as authApi from '../api/authApi';
 
@@ -108,3 +110,34 @@ export const refreshToken = createAsyncThunk<refreshTokenResponse, refreshTokenR
       }
   }
 );
+
+
+// Google OAuth Token to Backend Thunk
+export const sendGoogleOAuthTokenToBackend = createAsyncThunk<
+  googleOAuthResponse,
+  string // Google OAuth Access Token
+>(
+  'auth/sendGoogleOAuthToken',
+  async (accessToken, { rejectWithValue }) => {
+    try {
+      // You may need to include the client ID and other necessary parameters in the request
+      const payload = {
+        client_id: process.env.NEXT_PUBLIC_AUTH_GOOGLE_OAUTH_CLIENT_ID,
+        grant_type: 'convert_token',
+        token: accessToken,
+        backend: 'google-oauth2',
+      };
+
+      // Make the API call
+      const response = await authApi.sendGoogleOAuthTokenApi(payload);
+
+      // Return the response data if successful
+      return response;
+    } catch (error:any) {
+     
+      return rejectWithValue(error.response?.data || 'An error occurred');
+    }
+  }
+);
+
+

@@ -101,9 +101,9 @@ export interface refreshTokenResponse {
     }
 }
 export interface googleOAuthResponse {
-    success: boolean;
-    message: string;
-    data: {
+    // success: boolean;
+    // message: string;
+    // data: {
         access_token: string;
         expires_in: number;
         token_type: string;
@@ -114,6 +114,6 @@ export interface googleOAuthResponse {
             first_name: string;
             last_name: string;
         }
-    }
+    // }
 }
 

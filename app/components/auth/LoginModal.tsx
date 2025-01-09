@@ -10,11 +10,11 @@ import BackButton from '../ui/BackButton';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Image from 'next/image';
-import { signIn } from "next-auth/react";
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { checkEmail } from '@/app/features/auth/slices/authThunk';
 import { AppDispatch } from '@/app/store/store';
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { sendGoogleOAuthTokenToBackend } from '../../features/auth/slices/authThunk';
 
 interface LoginModalProps {
   open: boolean;
@@ -78,32 +78,65 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 // const handleGoogleSignIn = async () => {
 //   await signIn("google");
 // };
-const handleGoogleSignIn = async () => {
-  try {
-    const result = await signIn("google", {
-      callbackUrl: "/dashboard",
-      redirect: false,
-    });
+// const handleGoogleSignIn = async () => {
+  
 
-    if (result?.error) {
-      console.error(result.error);
-    } else {
-      const sessionResponse = await axios.get("/api/auth/session");
-      const session = sessionResponse.data;
-
-      if (session?.accessToken) {
-        Cookies.set("accessToken", session.accessToken);
-        // Cookies.set("accessToken", session.accessToken, { secure: true });
-        router.push("/dashboard");
-      } else {
-        console.error("Access token is missing in the session:", session);
-      }
+  // const handleGoogleSuccess = async (credentialResponse: any) => {
+  //   const token = credentialResponse.credential; // JWT Token from Google
+  //   console.log('Google OAuth Token:', token);
+  
+  //   try {
+  //     // Dispatch action to send token to your backend
+  //     const response = await dispatch(sendGoogleOAuthTokenToBackend(token)).unwrap();
+  //     console.log('Google OAuth Response:', response);
+  
+  //     if (response?.data?.access_token && response?.data.access_token) {
+  //       Cookies.set("acessToken",response?.data?.access_token);
+  //       Cookies.set("refreshToken",response?.data?.refresh_token);
+        
+  //       router.push('/dashboard'); // Navigate to dashboard
+  //     } else {
+  //       router.push('/'); // Navigate to registration if not registered
+  //     }
+  //     snackbarRef.current?.showSnackbar('Login Successful', 'success');
+  //   } catch (error: any) {
+  //     console.error('Google Login Error:', error.message);
+  //     snackbarRef.current?.showSnackbar(error.message || 'An error occurred during Google Login', 'error');
+  //   }
+  // };
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => handleGoogleSuccess(tokenResponse),
+    onError: () => console.error('Login Failed'),
+  });
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    console.log('Google OAuth Credential:', credentialResponse); 
+    console.log('Google OAuth Access Token:', credentialResponse.access_token); 
+    const token = credentialResponse.access_token; // Google OAuth token
+    if (!token) {
+      snackbarRef.current?.showSnackbar('Google authentication failed! ', 'error');
+      return;
     }
-  } catch (error) {
-    console.error("Google login error:", error);
-  }
-};
-
+  
+    try {
+      // Send the token to the backend
+      const response = await dispatch(sendGoogleOAuthTokenToBackend(token)).unwrap();
+      console.log('Google OAuth Response:', response);
+      console.log('Google OAuth Response:', response.access_token);
+  
+      if (response?.access_token) {
+        console.log(response?.access_token)
+        Cookies.set("accessToken", response?.access_token);
+        Cookies.set("refreshToken", response?.refresh_token);
+        router.push('/dashboard');
+      } else {
+        router.push('/');
+      }
+      snackbarRef.current?.showSnackbar('Login Successful', 'success');
+    } catch (error: any) {
+      console.error('Google Login Error:', error.message);
+      snackbarRef.current?.showSnackbar(error.message || 'An error occurred during Google Login', 'error');
+    }
+  };
 
 if (!open) return null;
   return (
@@ -116,17 +149,23 @@ if (!open) return null;
             <p className='font-semibold text-2xl text-center mb-16'>
               Sign In to unlock the best of Atlen
             </p>
+            <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
             <ButtonComponent sx={{
               fontSize: "18px", mt: 0, mb: 2, p: 1, width: '100%', color: "#3d3d3d", backgroundColor: 'white', border: '1px solid gray', '&:hover': {
                 backgroundColor: '#f0f0f0',
               },
-            }} onClick={handleGoogleSignIn}>
+            }} onClick={() => handleGoogleLogin()}>
+
 
               <Image src="./google-icon.svg" className='px-2' width={45} height={45} alt="" />
               Continue with Google
+               {/* <GoogleLogin 
+              onSuccess={handleGoogleSuccess} 
+              />  */}
+      
 
             </ButtonComponent>
-
+            </GoogleOAuthProvider>
             <ButtonComponent sx={{
               fontSize: "18px", mt: 0, mb: 6, p: 1, width: '100%', color: "#3d3d3d", backgroundColor: 'white', border: '1px solid gray', '&:hover': {
                 backgroundColor: '#f0f0f0',
@@ -164,7 +203,7 @@ if (!open) return null;
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             />
             <ButtonComponent onClick={handleContinueWithEmail} sx={{ mb: 7, mt: 2, width: '100%', py: 1.5, fontSize: '20px' }}>
-              {loading? "loading":"Continue"}
+              {loading? "Loading..":"Continue"}
             </ButtonComponent>
             <p className='text-neutral-900 text-[14px] text-center '>
               By proceeding, you agree to our <Link href=""><span className='underline font-semibold'>Terms of Use</span></Link> and <Link href=''><span className='underline font-semibold'> Privacy Policy</span></Link>.
