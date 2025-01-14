@@ -9,12 +9,14 @@ import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
 import OtpPage from './OtpPage';
 import ModalComponent from '../ui/ModalComponent';
 import Link from 'next/link';
+import Image from 'next/image';
 import LoginModal from './LoginModal';
 import { RootState } from '@/app/store/store';
 import { register ,verifyOtp} from '@/app/features/auth/slices/authThunk';
 import { AppDispatch } from '@/app/store/store';
 import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
+import Loading from '../ui/Loading';
 
 interface RegisterFormProps {
   
@@ -114,6 +116,8 @@ const [loading, setLoading] = useState<boolean>(false);
    
         Cookies.set('accessToken', response.data?.access || '');
         Cookies.set('refreshToken', response.data?.refresh || '');
+        <Loading open={false} title='Account Created Successfully' subtitle='You will be directed to the dashboard soon.'/>
+              
         router.replace('/dashboard');
         
       } else {
@@ -229,7 +233,10 @@ const handleResendOtp = async () => {
 
             />
             <ButtonComponent type="submit" sx={{ mb: 1, width: '100%', py: 1.5, fontSize: '20px', mt: 3 }}>
-              {loading? "Loading..":"Join"}
+              {loading ? (
+                                              <Image src="/small.gif" width={100} height={100} alt="Loading" />
+                                            ) : (
+                                              "Join")}
             </ButtonComponent>
 
             <p className='text-neutral-900 text-[14px] text-center mt-8'>

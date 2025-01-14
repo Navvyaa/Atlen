@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import InputComponent from '../ui/InputComponent';
 import { useRouter } from 'next/navigation';
 import { useModal } from '../../context/ModalContext';
@@ -41,26 +42,61 @@ const ForgotPasswordForm: React.FC = () => {
     router.push('/');
   };
 
+  const trimmedEmail = email.trim();
+  const checkResetAttempts = () => {
+    const attempts = JSON.parse(localStorage.getItem('passwordResetAttempts') || '{"count": 0}');
+    const now = Date.now();
+    
+   
+    if (attempts.timestamp && (now - attempts.timestamp) > 15 * 60 * 1000) {
+      localStorage.setItem('passwordResetAttempts', JSON.stringify({ count: 0, timestamp: now }));
+      return true;
+    }
+    
+  
+    if (attempts.count >= 3) {
+      const remainingTime = Math.ceil((attempts.timestamp + 15 * 60 * 1000 - now) / 60000);
+      snackbarRef.current?.showSnackbar(
+        `Too many attempts. Please try again after ${remainingTime} minutes.`,
+        'warning'
+      );
+      return false;
+    }
+    
+    return true;
+  };
+
+  const updateResetAttempts = () => {
+    const attempts = JSON.parse(localStorage.getItem('passwordResetAttempts') || '{"count": 0}');
+    localStorage.setItem('passwordResetAttempts', JSON.stringify({
+      count: attempts.count + 1,
+      timestamp: Date.now()
+    }));
+  };
+
   const handleNextStep = async () => {
     if (step === 1) {
-      if (!email) {
+      if (!checkResetAttempts()) {
+        return;
+      }
+      if (!trimmedEmail) {
         setEmailError(true);
         snackbarRef.current?.showSnackbar('Enter a valid Email', 'error');
         return;
       }
-      if (!emailRegex.test(email)) {
+      if (!emailRegex.test(trimmedEmail)) {
         setEmailError(true);
         snackbarRef.current?.showSnackbar('Invalid Email', 'error');
         return;
       }
       setLoading(true);
       try {
-        const response = await dispatch(forgotPassword({ email })).unwrap();
-        
+        const response = await dispatch(forgotPassword({ email:trimmedEmail })).unwrap();
+        updateResetAttempts();
         snackbarRef.current?.showSnackbar(response.message, 'success');
         setTimeout(() => {
           setStep(2);
-        }, 1000);
+        }, 200);
       } catch (error: any) {
         snackbarRef.current?.showSnackbar(error.response?.data?.message || 'An unknown error occurred', 'error');
       } finally {
@@ -78,19 +114,19 @@ const ForgotPasswordForm: React.FC = () => {
         snackbarRef.current?.showSnackbar('Please enter the passwords to proceed', 'error');
         return;
       }
-      if (newPassword !== confirmPassword) {
+      if (newPassword.trim() !== confirmPassword.trim()) {
         setPasswordError(true);
         snackbarRef.current?.showSnackbar('Looks like a mismatch. Double-check your passwords!', 'error');
         return;
       }
       setLoading(true);
       try {
-        const response = await dispatch(resetPassword({ email, new_password: newPassword, confirm_password: confirmPassword, reset_token: resetToken })).unwrap();
+        const response = await dispatch(resetPassword({ email: trimmedEmail, new_password: newPassword, confirm_password: confirmPassword, reset_token: resetToken })).unwrap();
      
         snackbarRef.current?.showSnackbar(response.message, 'success');
         setTimeout(() => {
           router.push('/');
-        }, 1000);
+        }, 500);
       } catch (error: any) {
         snackbarRef.current?.showSnackbar(error.response?.data?.message || 'An unknown error occurred', 'error');
       } finally {
@@ -209,8 +245,13 @@ const ForgotPasswordForm: React.FC = () => {
         )}
 
         {step !== 2 && (
-            <ButtonComponent onClick={handleNextStep} sx={{ my: 3, width: '100%', py: 1.5, fontSize: '20px' }} disabled={loading}>
-            {loading ? 'Loading...' : step === 1 ? 'Send OTP' : 'Done'}
+            <ButtonComponent onClick={handleNextStep} sx={{  width: '100%', py: 1.5, fontSize: '20px' }} >
+            {/* {loading ? 'Loading...' : step === 1 ? 'Send OTP' : 'Done'} */}
+            {loading ? (
+                              <Image src="/small.gif" width={100} height={100} alt="Loading" />
+                            ) : (
+                              step === 1 ? 'Send OTP' : 'Done'
+                            )}
             </ButtonComponent>
         )}
 

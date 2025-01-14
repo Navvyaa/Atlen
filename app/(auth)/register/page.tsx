@@ -3,15 +3,15 @@ import React, { Suspense } from 'react';
 
 import Navbar from "@/app/components/Navbar";
 import RegisterForm from "@/app/components/auth/RegisterForm";
-// import { EmailProvider } from "@/app/context/EmailContext";
+import Loading from "@/app/components/ui/Loading";
+
 
 
 const Register: NextPage = () => {
   return (
     <div className="w-full">
       <Navbar />
-      {/* <EmailProvider> */}
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading open={true} title="Loading" subtitle="" />}>
      <RegisterForm step={1}/>
       </Suspense>
     </div>

@@ -27,8 +27,12 @@ export const checkEmail = createAsyncThunk<checkEmailResponse, checkEmailRequest
     try {
         const response = await authApi.checkEmailApi(data);
         return response;
-    } catch (error) {
-        return rejectWithValue(error);
+    } catch (error :any) {
+      if ( error.response==="ERR_INTERNET_DISCONNECTED" ) {
+        // Network error or no internet connection
+        throw new Error('Please check your network connection');
+      }
+        return rejectWithValue(error.message);
       }
   }
 );

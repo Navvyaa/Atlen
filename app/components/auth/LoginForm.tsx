@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useState } from 'react';
+import Image from 'next/image';
 import { Box,  } from '@mui/material';
 import ButtonComponent from '../ui/ButtonComponent';
 import BackButton from '../ui/BackButton';
@@ -108,7 +109,11 @@ const LoginForm: React.FC <LoginFormProps>= () => {
               </Link>
             </Box>
             <ButtonComponent onClick={handleSubmit} type="submit" sx={{ mb: 7, mt: 2, width: '100%', py: 1.5, fontSize: '20px' }}>
-              {loading?"Loading...":"Continue"}
+              {loading ? (
+                                <Image src="/small.gif" width={100} height={100} alt="Loading" />
+                              ) : (
+                                "Continue"
+                              )}
             </ButtonComponent>
 
             <p className='text-neutral-900 text-[14px] text-center '>
