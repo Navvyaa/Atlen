@@ -1,14 +1,16 @@
 import Navbar from "./components/Navbar";
-
+import ButtonComponent from "./components/ui/ButtonComponent";
+// import { useModal } from '@/app/context/ModalContext';
+import HomeScreen from "./components/HomeScreen";
 export default function Home() {
   return (
-    <div>
-      {/* <h1 className="font-bold text-2xl">Trippin: Travel Planner</h1> */}
-      <section className="h-screen w-screen ">
-        <div className="flex space-y-2">
+      <section className="h-screen md:w-full bg-white">
+        <div className="flex space-y-2 sticky top-0 z-50">
           <Navbar />
         </div>
+        
+        <HomeScreen />
       </section>
-    </div>
+
   );
 }

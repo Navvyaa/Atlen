@@ -7,6 +7,7 @@ interface ButtonComponentProps {
   disabled?: boolean;
   sx?: SxProps;
   type?: 'button' | 'submit' | 'reset';
+  variant?: 'contained' | 'outlined';
 }
 
 const ButtonComponent: React.FC<ButtonComponentProps> = ({ children, onClick, disabled, sx, type = 'button' }) => {
