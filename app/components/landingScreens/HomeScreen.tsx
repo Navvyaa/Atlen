@@ -80,11 +80,11 @@ const HomeScreen: React.FC = () => {
                                 <img src="/sphere3.svg" className="absolute lg:block hidden top-[-80] left-[-100] z-10" alt="" />
                                 <img src="/vector1.svg" className="absolute lg:top-[-80] hidden lg:block lg:left-40 z-30" alt="" />
                                 <img src="/group-82.svg" className="absolute lg:hidden top-72  z-30" alt="" />
-                                <img src="/TripManager.svg" alt="" />
+                                <img src="/TripManager.svg" alt="" /> 
                                 <div className="font-semibold my-3 text-lg leading-snug">Trip Manager with Budget Insights</div>
                                 <div className="text-center my-3 text-black text-md font-normal">Organize your trips and track your spending effortlessly. View upcoming, ongoing, and past trips with real-time budget tracking and detailed expense breakdowns.</div>
                             </div>
-
+ 
                         </div>
                         <div className="bg-white border border-black   lg:flex flex-col justify-start items-center w-72 rounded-2xl shadow-lg lg:h-100 lg:w-72 text-center lg:mt-[-200px] relative">
                                     <img src="/group-82.svg" className="absolute lg:block hidden top-20 left-48 z-30" alt="" />
