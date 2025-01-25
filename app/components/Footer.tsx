@@ -42,7 +42,7 @@ const footer: React.FC = () => {
                             Guide Book
                         </div>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="lg:flex hidden flex-col gap-2">
                         <div className="font-medium text-[#2D3134] text-xl">
                             Company
                         </div>
@@ -53,17 +53,16 @@ const footer: React.FC = () => {
                             Guide Book
                         </div>
                     </div>
-                    {/* <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <div className="font-medium text-[#2D3134] text-lg">
-                            Resources
+                            Get App
                         </div>
                         <div className="text-md font-regular">
-                            Download <br/>
-                            Help Center <br/>
-                            App Directory <br/>
-                            Guide Book
+                            App Store <br/>
+                            Google Play Store <br/>
+                            
                         </div>
-                    </div> */}
+                    </div>
                 </div>
             </div>
 
