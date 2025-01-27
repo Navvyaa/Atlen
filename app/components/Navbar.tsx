@@ -14,7 +14,8 @@ const Navbar: React.FC = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
   return (
-    <div className={isModalOpen ? 'blur-background w-full' : 'w-full'}>
+  //  <div className='w-full'>
+      <div className={isModalOpen ? 'blur-background w-full' : 'w-full'}> 
       <nav className='w-full bg-white shadow-sm sticky z-50 top-0 p-2 flex flex-row items-center justify-between lg:justify-around'>
       <div className='flex flex-row justify-between mx-3 lg:mx-0 lg:justify-around items-center w-full'>
         

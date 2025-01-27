@@ -4,8 +4,8 @@ const footer: React.FC = () => {
         <section className="bg-[#FCF5F5] relative z-100 w-full inter  font-sans text-[#5B5F62] lg:p-16 lg:px-28">
             <div className="flex flex-row justify-between lg:p-2 p-8 items-center">
                 <div className="flex justify-center items-center gap-4 flex-col">
-                    <img src="/logo.svg" className="lg:w-32" alt="" />
-                    <div className="text-xl"> Enjoy touring with Atlen</div>
+                    <img src="/logo.svg" className="lg:w-32 w-24" alt="" />
+                    <div className="lg:text-xl text-md"> Enjoy touring with Atlen</div>
                     <div className="flex flex-row gap-4 ">
                         <button className="hover:shadow-lg">
                             <img src="/fb.svg" className="w-10 " alt="" />

@@ -73,7 +73,7 @@ const HomeScreen: React.FC = () => {
 
 
 
-                    <div className="flex mb-10 w-full lg:w-[1000px] mx-auto lg:flex-row flex-col justify-center 2xl:justify-around items-center lg:gap-12 gap-6 lg:pt-12 lg:h-[600px] z-50 pb-20">
+                    <div className="flex mb-10 w-full lg:w-[1000px] mx-auto lg:flex-row flex-col justify-center 2xl:justify-around items-center lg:gap-12 gap-6 lg:pt-12 lg:h-[600px] z-50 pb-40 lg:pb-20">
                         <div className="bg-white border border-black lg:left-10 flex flex-col justify-end lg:items-center rounded-2xl w-72 shadow-lg lg:h-100 lg:w-72 text-center">
 
                             <div className="flex flex-col m-10 justify-start items-center relative ">
@@ -106,7 +106,7 @@ const HomeScreen: React.FC = () => {
                     </div>
                 </section>
                 {/* EXPLORE */}
-                <section className="w-full my-4 relative items-center flex flex-col  justify-center  py-4">
+                <section className="w-full my-4 relative items-center flex flex-col  justify-center  lg:py-4">
                     {/* <div className="absolute bottom-0 w-[80%] h-[30%] bg-gradient-to-t from-gray-200 via-gray-100 to-transparent blur-sm   "></div> */}
                     <div className="absolute bottom-0 w-[80%] h-[30%] mx-auto left-0 right-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(229,231,235,1)_0%,_rgba(229,231,235,0)_100%)] blur-lg"></div>
 
@@ -123,7 +123,7 @@ const HomeScreen: React.FC = () => {
                                     {index === 0 && <img src="/sphere2.svg" className="absolute w-6 h-6 top-[-20] left-[-30]" alt="" />}
                                     {index === 2 && <img src="/sphere3.svg" className="lg:absolute hidden lg:block bottom-[-60] right-[-50]" alt="" />}
                                     <div className="h-[70%]">
-                                        <img src="/rectangle 6.svg" className="object-cover w-full" alt="" />
+                                        <img src="/rectangle.svg" className="object-cover w-full" alt="" />
                                     </div>
                                     <div className="h-[30%]">
                                         <div className="flex-col justify-start items-center gap-4 m-4 pb-6 ">
