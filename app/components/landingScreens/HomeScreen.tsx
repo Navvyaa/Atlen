@@ -74,11 +74,11 @@ const HomeScreen: React.FC = () => {
 
 
                     <div className="flex mb-10 w-full lg:w-[1000px] mx-auto lg:flex-row flex-col justify-center 2xl:justify-around items-center lg:gap-12 gap-6 lg:pt-12 lg:h-[600px] z-50 pb-40 lg:pb-20">
-                        <div className="bg-white border border-black lg:left-10 flex flex-col justify-end lg:items-center rounded-2xl w-72 shadow-lg lg:h-100 lg:w-72 text-center">
+                        <div className="bg-white border border-black lg:left-10 flex flex-col justify-end lg:items-center rounded-2xl w-72 z-40 shadow-lg lg:h-100 lg:w-72 text-center">
 
                             <div className="flex flex-col m-10 justify-start items-center relative ">
-                                <img src="/sphere3.svg" className="absolute lg:block hidden top-[-80] left-[-100] z-10" alt="" />
-                                <img src="/vector1.svg" className="absolute lg:top-[-80] hidden lg:block lg:left-40 z-30" alt="" />
+                                <img src="/sphere3.svg" className="absolute lg:block hidden top-[-80px] left-[-100px] z-3" alt="" />
+                                <img src="/vector1.svg" className="absolute lg:top-[-80px] hidden lg:block lg:left-40 z-30" alt="" />
                                 <img src="/group-82.svg" className="absolute lg:hidden top-72  z-30" alt="" />
                                 <img src="/TripManager.svg" alt="" /> 
                                 <div className="font-semibold my-3 text-lg leading-snug">Trip Manager with Budget Insights</div>
@@ -95,7 +95,7 @@ const HomeScreen: React.FC = () => {
                             </div>
                         </div>
                         <div className="bg-white border border-black   lg:flex flex-col justify-end items-center w-72 rounded-2xl shadow-lg lg:h-100 lg:w-72 text-center relative z-20">
-                            <img src="/sphere2.svg" className="absolute hidden lg:block z-12 top-[-120] right-[-20]  " alt="" />
+                            <img src="/sphere2.svg" className="absolute hidden lg:block z-12 top-[-120px] right-[-80px]  " alt="" />
                             <div className="flex flex-col m-10 justify-center items-center">
                                 <img src="/SmartPacking.svg" alt="" />
                                 <div className="font-semibold my-3 text-lg leading-snug">Smart Packing &<br /> Saved Spots</div>
@@ -120,8 +120,8 @@ const HomeScreen: React.FC = () => {
                             {["Paradise Beach, Bantayan Island", "Parabise Beach, Banayan Island", "Parzxis, France"].map((destination, index) => (
 
                                 <div key={index} className="bg-white  rounded-xl shadow lg:h-[500px] w-80 relative ">
-                                    {index === 0 && <img src="/sphere2.svg" className="absolute w-6 h-6 top-[-20] left-[-30]" alt="" />}
-                                    {index === 2 && <img src="/sphere3.svg" className="lg:absolute hidden lg:block bottom-[-60] right-[-50]" alt="" />}
+                                    {index === 0 && <img src="/sphere2.svg" className="absolute w-6 h-6 top-[-20px] left-[-30px]" alt="" />}
+                                    {index === 2 && <img src="/sphere3.svg" className=" lg:absolute hidden lg:block bottom-[-60px] right-[-50px]" alt="" />}
                                     <div className="h-[70%]">
                                         <img src="/rectangle.svg" className="object-cover w-full" alt="" />
                                     </div>
