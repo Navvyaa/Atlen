@@ -8,9 +8,15 @@ import { useModal } from '@/app/context/ModalContext';
 
 const HomeScreen: React.FC = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
-
+    const destinations = [
+        { name: "Paris", price: "$450.99", location: "Paris, France", img: "/rectangle.svg" },
+        { name: "Tokyo", price: "$620.75", location: "Tokyo, Japan", img: "/rectangle.svg" },
+        { name: "Rome", price: "$550.16", location: "Rome, Italy", img: "/rectangle.svg" },
+        { name: "New York", price: "$710.50", location: "New York, USA", img: "/rectangle.svg" },
+        { name: "London", price: "$500.25", location: "London, UK", img: "/rectangle.svg" },
+      ];
     return (
-        <div className={isModalOpen ? 'blur-background w-full' : 'w-full'}>
+        <div className={isModalOpen ? 'blur-background ' : ''}>
 
             <section className="h-full md:w-full bg-white">
                
@@ -193,7 +199,7 @@ const HomeScreen: React.FC = () => {
                     </div>
                 </section>
                 {/* FOOTER */}
-                <section id="footer" className="w-full ">
+                <section id="about" className="w-full ">
                     <Footer />
                 </section>
             </section>

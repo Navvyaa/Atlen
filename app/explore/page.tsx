@@ -1,6 +1,7 @@
-import Navbar from "./components/Navbar";
-import Explore from "./components/landingScreens/Explore";
-import HomeScreen from "./components/landingScreens/HomeScreen";
+
+import Navbar from "../components/Navbar";
+import Explore from "../components/landingScreens/Explore";
+
 export default function Home() {
 
   return (
@@ -9,8 +10,8 @@ export default function Home() {
        <div className="flex space-y-2 sticky w-full top-0 z-50">
                     <Navbar />
                 </div>
-      <HomeScreen />
-      {/* <Explore /> */}
+      <Explore />
+      
     </section>
 
   );
