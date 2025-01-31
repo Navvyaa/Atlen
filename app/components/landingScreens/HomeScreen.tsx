@@ -79,7 +79,7 @@ const HomeScreen: React.FC = () => {
 
 
 
-                    <div className="flex mb-10 w-full lg:w-[1000px] mx-auto lg:flex-row flex-col justify-center 2xl:justify-around items-center lg:gap-12 gap-6 lg:pt-12 lg:h-[600px] z-50 pb-40 lg:pb-20">
+                    <div className="flex mb-10 w-full lg:w-[1000px] mx-auto lg:flex-row flex-col justify-center 2xl:justify-around items-center lg:gap-12 gap-6 lg:pt-12 lg:h-[600px] z-50 pb-28 lg:pb-20">
                         <div className="bg-white border border-black lg:left-10 flex flex-col justify-end lg:items-center rounded-2xl w-72 z-40 shadow-lg lg:h-100 lg:w-72 text-center">
 
                             <div className="flex flex-col m-10 justify-start items-center relative ">
