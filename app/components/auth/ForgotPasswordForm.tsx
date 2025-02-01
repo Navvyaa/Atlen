@@ -13,11 +13,20 @@ import { RootState } from '@/app/store/store';
 import { forgotPassword, resetPassword, verifyOtp } from '@/app/features/auth/slices/authThunk';
 import { AppDispatch } from '@/app/store/store';
 import { useDispatch, useSelector } from 'react-redux';
+// import LoginModal from './LoginModal';
+import LoginForm from './LoginForm';
+
+// interface forgotPasswordFormProps {
+//   // open: boolean;
+//   onClose: () => void;
+//   // step: number;
+// }
 
 const ForgotPasswordForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const initialEmail = useSelector((state: RootState) => state.auth.email);
   const { isModalOpen, openModal, closeModal } = useModal();
+  const [showLoginForm, setShowLoginForm] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
   const [email, setEmail] = useState<string>(initialEmail || '');
   const [emailError, setEmailError] = useState<boolean>(false);
@@ -30,7 +39,7 @@ const ForgotPasswordForm: React.FC = () => {
   const [remainingTime, setRemainingTime] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [isResendDisabled, setIsResendDisabled] = useState<boolean>(false);
-  let countdownInterval: NodeJS.Timeout | null = null; // Use a global interval reference
+  let countdownInterval: NodeJS.Timeout | null = null;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   useEffect(() => {
@@ -125,6 +134,7 @@ const ForgotPasswordForm: React.FC = () => {
      
         snackbarRef.current?.showSnackbar(response.message, 'success');
         setTimeout(() => {
+          closeModal();
           router.push('/');
         }, 500);
       } catch (error: any) {
@@ -185,13 +195,22 @@ const ForgotPasswordForm: React.FC = () => {
       snackbarRef.current?.showSnackbar('An error occurred! Please try again', 'error');
     }
   };
-
+ const handleBack = () => {
+    closeModal(); // Close current modal
+    openModal(); // Open login modal
+    setShowLoginForm(true);
+  };
+  
 
   
   return (
+    <>
+    {showLoginForm && <LoginForm  />}
+    {!showLoginForm &&  (
+    
     <div className={isModalOpen ? 'blur-background' : ''}>
       <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal}>
-        {step === 1 ? <BackButton /> : step === 2 ? <BackButton onBack={() => setStep(1)} /> : null}
+        {step === 1 ? <BackButton onBack={handleBack}/> : step === 2 ? <BackButton onBack={() => setStep(1)} /> : null}
 
         <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
 
@@ -262,6 +281,8 @@ const ForgotPasswordForm: React.FC = () => {
         )}
       </ModalComponent>
     </div>
+      )};
+      </>
   );
 };
 

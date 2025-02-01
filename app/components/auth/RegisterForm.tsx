@@ -17,14 +17,17 @@ import { AppDispatch } from '@/app/store/store';
 import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import Loading from '../ui/Loading';
+import { useModal } from '@/app/context/ModalContext';
 
 interface RegisterFormProps {
-  
+  // open: boolean;
   step: number;
 }
 
+
 const RegisterForm: React.FC<RegisterFormProps> = ({ step: initialStep }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
+   const {  openModal, closeModal } = useModal();
   const dispatch = useDispatch<AppDispatch>();
   const email = useSelector((state: RootState) => state.auth.email);
   const [firstName, setFirstName] = useState<string>('');
@@ -174,20 +177,21 @@ const handleResendOtp = async () => {
   } 
 }
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    router.push('/');
-  };
+  // const handleCloseModal = () => {
+  //   // setIsModalOpen(false);
+  //   closeModal();
+  //   router.push('/');
+  // };
 
   return (
     <div className={isModalOpen ? 'blur-background' : ''}>
 
 
-      <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal} >
+      <ModalComponent isOpen={isModalOpen} onClose={closeModal} >
         {step === 1 && (
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, mx: 2, width: '100%' }}>
             <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
-            <BackButton onBack={() => router.push('/')} />
+            {/* <BackButton onBack={() => { closeModal(); router.push('/'); }} /> */}
             <LoginModal step={2} open={false} onClose={function (): void {
               throw new Error('Function not implemented.');
             }} />

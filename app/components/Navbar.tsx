@@ -34,18 +34,9 @@ const Navbar: React.FC = () => {
             bg-white lg:bg-transparent p-4 lg:p-3 shadow-md lg:shadow-none
             m-0 text-black text-lg font-semibold items-center`}>
           
-          <li>
-            <Link href="/" className=' decoration-none my-2 lg:m-1 p-2'>Home</Link>
-          </li>
-          <li>
-            <a href="/explore" className=' decoration-none my-2 lg:m-1 p-2'>Explore</a>
-          </li>
-          {/* <li className='m-0'>
-            <a href="#HowItWorks" className=' decoration-none m-1 p-2'>Trips</a>
-          </li> */}
-          <li className='m-0'>
-            <Link href="/#about" className='decoration-none my-2 lg:m-1 p-2'>About</Link>
-          </li>
+          <li><Link href="/" className=' decoration-none my-2 lg:m-1 p-2'>Home</Link></li>
+          <li><Link href="/explore" className=' decoration-none my-2 lg:m-1 p-2'>Explore</Link></li>
+          <li ><Link href="/#about" className='decoration-none my-2 lg:m-1 p-2'>About</Link></li>
         </ul>
         <div className='hidden lg:block'>
         <ButtonComponent onClick={openModal} sx={{ m: 1, py: 2,px:3, fontSize: '16px' ,height: '40px'}}>

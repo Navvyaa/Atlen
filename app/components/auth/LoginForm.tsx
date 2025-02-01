@@ -14,16 +14,19 @@ import { login } from '@/app/features/auth/slices/authThunk';
 import { AppDispatch } from '@/app/store/store';
 import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
-interface LoginFormProps {
-  email:string
-}
+import { useModal } from '@/app/context/ModalContext';
+import ForgotPasswordForm from './ForgotPasswordForm';
+import LoginModal from './LoginModal';
 
-const LoginForm: React.FC <LoginFormProps>= () => {
+const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
  
   const email = useSelector((state: RootState) => state.auth.email);
   // const email = searchParams.get('email') || '';
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [showForgotPassword,setShowForgotPassword]=useState<boolean>(false);
+  // const [showLoginModal,setShowLoginModal]=useState<boolean>(false);
+  // const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+   const { isModalOpen, openModal, closeModal } = useModal();
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const snackbarRef = useRef<SnackbarRef>(null);
@@ -33,7 +36,8 @@ const LoginForm: React.FC <LoginFormProps>= () => {
   const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    // setIsModalOpen(false);
+    closeModal();
     router.push('/');
   };
  
@@ -77,15 +81,24 @@ const LoginForm: React.FC <LoginFormProps>= () => {
       }
   };
 
+  // const handleBack = () => {
+  //   closeModal(); // Close current modal
+  //   openModal(); // Open login modal
+  //   setShowLoginModal(true);
+  // };
+  
   return (
     <>
-
+    {showForgotPassword && <ForgotPasswordForm />}
+    {/* {showLoginModal && <LoginModal open={isModalOpen} onClose={closeModal} step={1} />} */}
+    
+    {!showForgotPassword && (
       <div className={isModalOpen  ? 'blur-background' : ''}>
         <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal}>
 
           <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, mx: 2, width: '100%' }}>
-            <BackButton />
+            {/* <BackButton onBack={handleBack}/> */}
             <div className='flex flex-col items-center mb-5'>
               
               <div className='font-semibold mx-0 px-0 w-[100%] text-2xl text-center mb-2'>
@@ -98,15 +111,18 @@ const LoginForm: React.FC <LoginFormProps>= () => {
               placeholder="Password"
               error={error}
               onInputChange={() => setError(false)} 
-              
+              showPasswordRequirements={false}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPassword(e.target.value); }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-              <Link href="/forgot-password">
-                <button type='button' className='text-black font-medium text-md cursor-pointer mb-4'>
-                  Forgot password?
+                <button 
+                type='button' 
+                className='text-black font-medium text-md cursor-pointer mb-4'
+                onClick={() => setShowForgotPassword(true)}
+                >
+                Forgot password?
                 </button>
-              </Link>
+                
             </Box>
             <ButtonComponent onClick={handleSubmit} type="submit" sx={{ mb: 7, mt: 2, width: '100%', py: 1.5, fontSize: '20px' }}>
               {loading ? (
@@ -122,6 +138,7 @@ const LoginForm: React.FC <LoginFormProps>= () => {
           </Box>
         </ModalComponent>
       </div>
+      )}
 
     </>
   );

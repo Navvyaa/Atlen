@@ -16,6 +16,8 @@ import { checkEmail } from '@/app/features/auth/slices/authThunk';
 import { AppDispatch } from '@/app/store/store';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { sendGoogleOAuthTokenToBackend } from '../../features/auth/slices/authThunk';
+import RegisterForm from './RegisterForm';
+import LoginForm from './LoginForm';
 
 interface LoginModalProps {
   open: boolean;
@@ -25,7 +27,8 @@ interface LoginModalProps {
 
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
@@ -67,11 +70,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
       // }
 
       if (!response.data.is_registered) {
-        router.push(`/register`);
+        setShowRegisterForm(true);
+        
       } else if (response.data.is_registered && response.data.is_verified) {
-        router.push(`/login`);
+        setShowLoginForm(true);
       }
-      onClose();
+      // onClose();
     } catch (error: any) {
       if (error.code === 'ERR_INTERNET_DISCONNECTED' || error.message?.includes('network')) {
         snackbarRef.current?.showSnackbar('Please check your internet connection', 'error');
@@ -133,6 +137,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   if (!open) return null;
   return (
     <>
+    {showRegisterForm && <RegisterForm step={1} />}
+      {showLoginForm && <LoginForm  />}
+      {!showRegisterForm && !showLoginForm && (
+      
       <ModalComponent isOpen={open} onClose={onClose}>
         {step === 1 && (
           isGoogleLoading ? (
@@ -217,7 +225,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
           </>
         )}
       </ModalComponent>
-
+      )}
     </>
   );
 };

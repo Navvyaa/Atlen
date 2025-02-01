@@ -10,7 +10,7 @@ const Login: NextPage = () => {
     <div className="w-full">
       <Navbar />
        <Suspense fallback={<div>Loading...</div>}>
-      <LoginForm email={""} />
+      <LoginForm  />
       </Suspense>
     </div>
   );

@@ -1,21 +1,39 @@
-// middleware.ts (or equivalent in your Next.js project)
+
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+
+
+const publicPaths = [
+  '/',
+  '/explore',
+  '/api/auth/(.*)', // Allow auth API routes
+];
+
+
+const protectedPaths = [
+  '/dashboard',
+
+];
 
 export function middleware(req: NextRequest) {
   const accessToken = req.cookies.get('accessToken');
   const refreshToken = req.cookies.get('refreshToken');
+  const { pathname } = req.nextUrl;
 
-  const publicPaths = ['/', '/login', '/register', '/forgot-password'];
+  // Check if path is public or protected
+  const isPublicPath = publicPaths.some(path => 
+    pathname.startsWith(path) || pathname.match(path)
+  );
+  const isProtectedPath = protectedPaths.some(path => 
+    pathname.startsWith(path)
+  );
 
-  
   if (!accessToken || !refreshToken) {
-    if (!publicPaths.includes(req.nextUrl.pathname)) {
+    if (isProtectedPath) {
       return NextResponse.redirect(new URL('/', req.url));
     }
   } else {
-    // Redirect authenticated users away from public paths
-    if (publicPaths.includes(req.nextUrl.pathname)) {
+    if (pathname === '/') {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
   }
@@ -24,5 +42,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login', '/register', '/forgot-password', '/dashboard/:path*'], 
+  matcher: [
+    '/((?!api/auth|_next/static|_next/image|images|favicon.ico).*)',
+  ],
 };
+

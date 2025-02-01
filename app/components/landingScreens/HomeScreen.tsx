@@ -1,20 +1,14 @@
 "use client"
 
+import Link from "next/link";
 import LoginModal from "../auth/LoginModal";
 import Footer from "../Footer";
-import Navbar from "../Navbar";
 import ButtonComponent from "../ui/ButtonComponent";
 import { useModal } from '@/app/context/ModalContext';
 
 const HomeScreen: React.FC = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
-    const destinations = [
-        { name: "Paris", price: "$450.99", location: "Paris, France", img: "/rectangle.svg" },
-        { name: "Tokyo", price: "$620.75", location: "Tokyo, Japan", img: "/rectangle.svg" },
-        { name: "Rome", price: "$550.16", location: "Rome, Italy", img: "/rectangle.svg" },
-        { name: "New York", price: "$710.50", location: "New York, USA", img: "/rectangle.svg" },
-        { name: "London", price: "$500.25", location: "London, UK", img: "/rectangle.svg" },
-      ];
+    
     return (
         <div className={isModalOpen ? 'blur-background ' : ''}>
 
@@ -147,7 +141,8 @@ const HomeScreen: React.FC = () => {
                         </div>
                         <div className="flex py-3 justify-center  my-5 ">
                             <button className="font-semibold text-2xl flex items-center">
-                                <span>Explore All</span>
+                            <span>
+                            <Link href="/explore" className=' decoration-none my-2 lg:m-1 p-2'>Explore All</Link></span>
                                 <img src="/arrow.svg" className="px-2" alt="" />
                             </button>
                         </div>

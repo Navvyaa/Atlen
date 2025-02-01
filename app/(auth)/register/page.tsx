@@ -8,6 +8,7 @@ import Loading from "@/app/components/ui/Loading";
 
 
 const Register: NextPage = () => {
+  
   return (
     <div className="w-full">
       <Navbar />

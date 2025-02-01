@@ -13,6 +13,8 @@ interface InputComponentProps {
   sx?: SxProps;
   error?: boolean;
   onInputChange?: () => void;
+  showPasswordRequirements?: boolean;
+
 }
 
 const InputComponent: React.FC<InputComponentProps> = ({
@@ -25,6 +27,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
   sx = {}, 
   error,
   onInputChange,
+  showPasswordRequirements = true,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -121,7 +124,8 @@ const InputComponent: React.FC<InputComponentProps> = ({
       {type === 'password' &&
         isFocused &&
         !allRequirementsMet &&
-        currentPath !== '/login' && (
+        showPasswordRequirements &&
+        (
           <div className="absolute mt-24 p-2 bg-[#D9E0FA] rounded-xl z-10 w-full text-[14px] leading-5 text-left">
             <p className="text-black">Password must contain:</p>
             <div>
