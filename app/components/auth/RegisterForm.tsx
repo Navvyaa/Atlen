@@ -2,7 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, } from '@mui/material';
 import ButtonComponent from '../ui/ButtonComponent';
-import BackButton from '../ui/BackButton';
+// import BackButton from '../ui/BackButton';
+import { logout } from '@/app/features/auth/slices/authSlice';
 import InputComponent from '../ui/InputComponent';
 import { useRouter } from 'next/navigation';
 import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
@@ -22,10 +23,11 @@ import { useModal } from '@/app/context/ModalContext';
 interface RegisterFormProps {
   // open: boolean;
   step: number;
+  onClose?: () => void;
 }
 
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ step: initialStep }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ step: initialStep,onClose }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
    const {  openModal, closeModal } = useModal();
   const dispatch = useDispatch<AppDispatch>();
@@ -49,7 +51,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ step: initialStep }) => {
   useEffect(() => {
     snackbarRef.current?.clearSnackbar();
   }, []);
-
+ 
 
 const [loading, setLoading] = useState<boolean>(false);
   const handleSubmit = async (event: React.FormEvent) => {
@@ -120,9 +122,7 @@ const [loading, setLoading] = useState<boolean>(false);
         Cookies.set('accessToken', response.data?.access || '');
         Cookies.set('refreshToken', response.data?.refresh || '');
         <Loading open={false} title='Account Created Successfully' subtitle='You will be directed to the dashboard soon.'/>
-              
         router.replace('/dashboard');
-        
       } else {
         snackbarRef.current?.showSnackbar('Email is required to verify OTP.', 'error');
       }
@@ -177,17 +177,19 @@ const handleResendOtp = async () => {
   } 
 }
 
-  // const handleCloseModal = () => {
-  //   // setIsModalOpen(false);
-  //   closeModal();
-  //   router.push('/');
-  // };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    onClose && onClose();
+    dispatch(logout());
+    router.push('/');
+  };
 
   return (
+    
     <div className={isModalOpen ? 'blur-background' : ''}>
 
 
-      <ModalComponent isOpen={isModalOpen} onClose={closeModal} >
+      <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal} >
         {step === 1 && (
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, mx: 2, width: '100%' }}>
             <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
@@ -253,6 +255,7 @@ const handleResendOtp = async () => {
         )}
       </ModalComponent>
     </div >
+      
 
   );
 };

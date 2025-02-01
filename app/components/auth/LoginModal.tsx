@@ -71,7 +71,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
       if (!response.data.is_registered) {
         setShowRegisterForm(true);
-        
       } else if (response.data.is_registered && response.data.is_verified) {
         setShowLoginForm(true);
       }
@@ -137,7 +136,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   if (!open) return null;
   return (
     <>
-    {showRegisterForm && <RegisterForm step={1} />}
+    {showRegisterForm && email && <RegisterForm step={1} 
+    onClose={() => {
+      setShowRegisterForm(false);
+      onClose();
+    }}
+    />}
       {showLoginForm && <LoginForm  />}
       {!showRegisterForm && !showLoginForm && (
       

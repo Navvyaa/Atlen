@@ -16,7 +16,6 @@ import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { useModal } from '@/app/context/ModalContext';
 import ForgotPasswordForm from './ForgotPasswordForm';
-import LoginModal from './LoginModal';
 
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,7 +25,7 @@ const LoginForm: React.FC = () => {
   const [showForgotPassword,setShowForgotPassword]=useState<boolean>(false);
   // const [showLoginModal,setShowLoginModal]=useState<boolean>(false);
   // const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
-   const { isModalOpen, openModal, closeModal } = useModal();
+   const { isModalOpen,  closeModal } = useModal();
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const snackbarRef = useRef<SnackbarRef>(null);

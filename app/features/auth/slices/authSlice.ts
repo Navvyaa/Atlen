@@ -30,9 +30,9 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.tokens = null;
-      state.email = null; // Clear email on logout
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      state.email = null; 
+      Cookies.remove('accessToken');
+      Cookies.remove('refreshToken');
     },
   },
   extraReducers: (builder) => {
