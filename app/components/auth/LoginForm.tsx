@@ -17,7 +17,11 @@ import Cookies from 'js-cookie';
 import { useModal } from '@/app/context/ModalContext';
 import ForgotPasswordForm from './ForgotPasswordForm';
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  onClose?: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
   const dispatch = useDispatch<AppDispatch>();
  
   const email = useSelector((state: RootState) => state.auth.email);
@@ -73,6 +77,7 @@ const LoginForm: React.FC = () => {
         Cookies.set('refreshToken', response.data.refresh);
         snackbarRef.current?.showSnackbar(response.message, 'success');
         router.replace('/dashboard');
+        onClose && onClose();
       } catch (error: any) {
         snackbarRef.current?.showSnackbar(error.response.data.message || 'An unknown error occurred', 'error');
       } finally {

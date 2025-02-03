@@ -9,12 +9,13 @@ interface LoadingProps {
   open: boolean; 
   title?: string;
   subtitle?: string;
+
 }
 
-const Loading: React.FC<LoadingProps> = ({ open,title,subtitle }) => {
+const Loading: React.FC<LoadingProps> = ({ open,title,subtitle, }) => {
   return (
     
-      <div className="flex flex-col mt-5 items-center justify-center">
+      <div className="flex flex-col mt-5 w-full h-full items-center justify-center">
       
        <p className='font-semibold text-2xl text-primary text-center my-8'>
         {title}
@@ -26,6 +27,7 @@ const Loading: React.FC<LoadingProps> = ({ open,title,subtitle }) => {
           Please wait ... <br />
           {subtitle}
         </p>
+       
       )}
       </div>
    

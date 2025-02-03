@@ -1,5 +1,4 @@
 import Navbar from "./components/Navbar";
-import Explore from "./components/landingScreens/Explore";
 import HomeScreen from "./components/landingScreens/HomeScreen";
 export default function Home() {
 

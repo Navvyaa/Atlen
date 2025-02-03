@@ -4,14 +4,25 @@ import { useModal } from '@/app/context/ModalContext';
 import ButtonComponent from './ui/ButtonComponent';
 import LoginModal from './auth/LoginModal';
 import Link from 'next/link';
+import { logout } from '@/app/features/auth/slices/authSlice';
+import { AppDispatch } from '@/app/store/store';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
+interface NavbarProps {
+  mode?:"loggedIn" | "default";
+}
 
-
-const Navbar: React.FC = () => {
+const Navbar: React.FC <NavbarProps>= ({mode="default"}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const { isModalOpen, openModal, closeModal } = useModal();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+ const router = useRouter();
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+  const handleLogOut = () => {
+    dispatch(logout());
+    router.push('/');
   };
   return (
   //  <div className='w-full'>
@@ -33,15 +44,36 @@ const Navbar: React.FC = () => {
           } lg:flex flex-col lg:flex-row absolute lg:relative top-16 lg:top-0 left-0 w-full lg:w-auto 
             bg-white lg:bg-transparent p-4 lg:p-3 shadow-md lg:shadow-none
             m-0 text-black text-lg font-semibold items-center`}>
-          
+          {mode==="default" && (
+            <>
           <li><Link href="/" className=' decoration-none my-2 lg:m-1 p-2'>Home</Link></li>
           <li><Link href="/explore" className=' decoration-none my-2 lg:m-1 p-2'>Explore</Link></li>
           <li ><Link href="/#about" className='decoration-none my-2 lg:m-1 p-2'>About</Link></li>
-        </ul>
+          </>
+        )}
+        {mode==="loggedIn" && (
+          <>
+          <li><Link href="/dashboard" className=' decoration-none my-2 lg:m-1 p-2 px-4'>Home</Link></li>
+          <li><Link href="/dashboard/explore" className=' decoration-none my-2 lg:m-1 p-2 px-4'>Explore</Link></li>
+          <li><Link href="/dashboard/trips" className=' decoration-none my-2 lg:m-1 p-2 px-4'>Trips</Link></li>
+          <li ><Link href="/dashboard#about" className='decoration-none my-2 lg:m-1 p-2'>About</Link></li>
+          </>
+          )}
+
+          </ul>
         <div className='hidden lg:block'>
+          {mode==="default" && (
         <ButtonComponent onClick={openModal} sx={{ m: 1, py: 2,px:3, fontSize: '16px' ,height: '40px'}}>
           Sign In
         </ButtonComponent>
+          )}
+          {
+            mode==="loggedIn" && (
+              <ButtonComponent onClick={handleLogOut} sx={{ m: 1, py: 2,px:3, fontSize: '16px' ,height: '40px'}}>
+          Log Out
+        </ButtonComponent>
+            )
+          }
         </div>
         </div>
       </nav>

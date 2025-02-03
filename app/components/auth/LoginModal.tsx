@@ -18,6 +18,7 @@ import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { sendGoogleOAuthTokenToBackend } from '../../features/auth/slices/authThunk';
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
+import { on } from 'events';
 
 interface LoginModalProps {
   open: boolean;
@@ -90,7 +91,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
   //handling google login
   const handleGoogleLogin = useGoogleLogin({
-    // onSuccess: (tokenResponse) => handleGoogleSuccess(tokenResponse),
+    
     onSuccess: (tokenResponse) => {
       setIsGoogleLoading(true); // Set loading when returning from Google
       handleGoogleSuccess(tokenResponse);
@@ -104,7 +105,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 
   });
   const handleGoogleSuccess = async (credentialResponse: any) => {
-    const token = credentialResponse.access_token; // Google OAuth token
+    const token = credentialResponse.access_token; 
     if (!token) {
       snackbarRef.current?.showSnackbar('Google authentication failed! ', 'error');
       return;
@@ -118,6 +119,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
         Cookies.set("accessToken", response?.access_token);
         Cookies.set("refreshToken", response?.refresh_token);
         router.push('/dashboard');
+        onClose();
       } else {
         router.push('/');
       }
@@ -142,7 +144,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
       onClose();
     }}
     />}
-      {showLoginForm && <LoginForm  />}
+      {showLoginForm && <LoginForm   onClose={() => {
+      setShowRegisterForm(false);
+      onClose();
+    }}/>}
       {!showRegisterForm && !showLoginForm && (
       
       <ModalComponent isOpen={open} onClose={onClose}>
@@ -150,8 +155,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
           isGoogleLoading ? (
             <>
               
-              <Loading open={false} title='Account Created Successfully' subtitle='You will be directed to the dashboard soon.'/>
-              
+              <Loading  open={false} title='Account Created Successfully' subtitle='You will be directed to the dashboard soon.'/>
+             
 
               {/* <CircularProgress size={70} /> */}
             </>) : (
