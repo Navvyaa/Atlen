@@ -3,21 +3,21 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import ButtonComponent from "../components/ui/ButtonComponent";
-import Footer from './Footer';
+import ButtonComponent from "../ui/ButtonComponent";
+import Footer from '../Footer';
 import Image from 'next/image';
 import Link from 'next/link';
 
 const ClientDashboard: React.FC = () => {
   const router = useRouter();
-  const accessToken = Cookies.get('accessToken');
+  // const accessToken = Cookies.get('accessToken');
 
-  useEffect(() => {
-    if (!accessToken) {
-      console.log("No Access Token found");
-      router.push('/');
-    }
-  }, [accessToken, router]);
+  // useEffect(() => {
+  //   if (!accessToken) {
+  //     console.log("No Access Token found");
+  //     router.push('/');
+  //   }
+  // }, [accessToken, router]);
 
   return (
     <div className="h-full w-full bg-white ">
@@ -35,7 +35,7 @@ const ClientDashboard: React.FC = () => {
               </div>
             </div>
             <div className="lg:hidden flex absolute z-0 items-center w-full justify-center mt-4">
-              <Image width={200} height={200} src="/header-mob.svg" alt="" />
+              <Image width={400} height={400} src="/header-mob.svg" alt="" />
             </div>
             <div className="lg:text-7xl text-6xl lg:text-left text-center z-20 lg:static relative mt-24 font-bold leading-42"> Travel <span className="text-primary">top</span> <br /> <span className="text-primary">destinations</span> <br /> of the world</div>
             <div className="text-[#888888] text-lg  font-semibold py-12 leading-7 w-full relative ">Effortlessly plan trips, track budgets, and explore destinations tailored to you.</div>
@@ -43,13 +43,13 @@ const ClientDashboard: React.FC = () => {
 
               <ButtonComponent sx={{ color: 'white', py: 3, px: 3, fontSize: '20px', fontWeight: 'regular' }}>Create Trip</ButtonComponent>
               {/* <LoginModal open={isModalOpen} onClose={closeModal} step={1} /> */}
-              {/* <div className="lg:block hidden">
+              <div className="lg:block hidden border border-primary rounded-[17px]">
                                     <ButtonComponent variant="outlined" onClick={() => {router.push("/dashboard/explore")}} sx={{
                                         backgroundColor: 'transparent', borderColor: 'var(--primary-color)', color: 'var(--primary-color)', py: 3, px: 8, fontSize: '18px', fontWeight: 'bold', '&:hover': {
                                             backgroundColor: 'none',
                                         },
                                     }}>Explore Now</ButtonComponent>
-                                </div> */}
+                                </div>
             </div>
           </div>
           <div className="relative z-10 order-1  hidden lg:block lg:order-2"> <img src="/Hero.svg" alt="" /></div>
@@ -60,7 +60,7 @@ const ClientDashboard: React.FC = () => {
 
 
 
-        <section className="w-full my-4 relative items-center flex flex-col  justify-center  lg:py-4">
+        <section className="w-full my-4 bg-[#edf2f4] lg:bg-transparent relative items-center flex flex-col  justify-center  pt-24  lg:py-4 ">
           {/* <div className="absolute bottom-0 w-[80%] h-[30%] bg-gradient-to-t from-gray-200 via-gray-100 to-transparent blur-sm   "></div> */}
           <div className="absolute bottom-0 w-[80%] h-[30%] mx-auto left-0 right-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(229,231,235,1)_0%,_rgba(229,231,235,0)_100%)] blur-lg"></div>
 
@@ -71,15 +71,15 @@ const ClientDashboard: React.FC = () => {
             <div className=" text-[#888888] text-center mt-4 mb-12 text-lg font-medium ">Top-Rated Destinations to Inspire Your Wanderlust</div>
             <div className="flex  justify-center items-center flex-col lg:flex-row gap-10">
 
-              {["Paradise Beach, Bantayan Island", "Parabise Beach, Banayan Island", "Parzxis, France"].map((destination, index) => (
+              {["Paradise Beach, Bantayan Island", "Parabise Beach, Banayan Island", "Paris, France"].map((destination, index) => (
 
-                <div key={index} className="bg-white  rounded-xl shadow lg:h-[500px] w-80 relative ">
+                <div key={index} className="bg-white h-[380px] rounded-3xl shadow lg:h-[480px] w-80 relative ">
                   {index === 0 && <img src="/sphere2.svg" className="absolute w-6 h-6 top-[-20px] left-[-30px]" alt="" />}
                   {index === 2 && <img src="/sphere3.svg" className=" lg:absolute hidden lg:block bottom-[-60px] right-[-50px]" alt="" />}
-                  <div className="h-[70%]">
-                    <img src="/rectangle.svg" className="object-cover w-full" alt="" />
+                  <div className=" lg:h-[70%]">
+                    <img src="/rectangle.svg" className="object-cover lg:h-auto h-[240px] rounded-lg w-full" alt="" />
                   </div>
-                  <div className="h-[30%]">
+                  <div className=" lg:h-[30%]">
                     <div className="flex-col justify-start items-center gap-4 m-4 pb-6 ">
                       <div className="justify-between flex flex-row items-center ">
                         <div className="grow shrink basis-0 text-black text-2xl font-bold">{destination}</div>
@@ -107,28 +107,25 @@ const ClientDashboard: React.FC = () => {
 
 
       <section className='w-full bg-white relative  flex flex-col  justify-center lg:py-4'>
-        {/* <div className='flex flex-row lg:text-left items-center text-left  gap-4'>
-                <Image width={12} height={12} src="/line1.svg" alt="" className="m-2" />
-                <span className="text-[#1e344f] ml-2 lg:text-7xl text-5xl text-left font-semibold">Use AI to plan your trip</span>
-                </div> */}
+      
         <div className="relative z-40 lg:pl-16 pl-4 pb-4">
           <div className="flex items-center  my-4">
             <Image width={12} height={12} src="/line1.svg" alt="" className='mx-2' />
             <span className="text-[#1e344f] relative z-40 ml-2 text-5xl lg:text-7xl font-semibold">Use AI to plan your trips</span>
           </div>
-          <div className='my-8'>
+          <div className='my-8 '>
             <ButtonComponent sx={{ color: 'white', py: 3, px: 3, fontSize: '20px', fontWeight: 'regular' }}>Create Trip</ButtonComponent>
           </div>
-            <div className='flex flex-row gap-6 items-start overflow-x-auto justify-center pb-4'>
+          <div className='flex flex-row gap-6 items-start overflow-x-auto justify-center pb-4'>
 
             {Array.from({ length: 4 }).map((_, index) => (
               <div key={index} className='w-[280px] h-[280px] rounded-2xl relative flex-shrink-0'>
-              <Image src="/aiSymbol.svg" width={30} height={30} className='absolute top-5 left-5' alt="" />
-              <img src="/rectangle.svg" alt="" className='w-full h-full rounded-3xl ' />
+                <Image src="/aiSymbol.svg" width={30} height={30} className='absolute top-5 left-5' alt="" />
+                <img src="/rectangle.svg" alt="" className='w-full h-full rounded-3xl ' />
               </div>
             ))}
 
-            </div>
+          </div>
         </div>
 
       </section>

@@ -39,12 +39,14 @@ const HomeScreen: React.FC = () => {
 
                                 <ButtonComponent onClick={openModal} sx={{ color: 'white', py: 3, px: 4, fontSize: '18px', fontWeight: 'bold' }}>Start Planning</ButtonComponent>
                                 <LoginModal open={isModalOpen} onClose={closeModal} step={1} />
-                                <div className="lg:block hidden">
+                                <div className="lg:block hidden border border-primary rounded-[16px]">
+                                    <Link href="/explore">
                                     <ButtonComponent variant="outlined" sx={{
                                         backgroundColor: 'transparent', borderColor: 'var(--primary-color)', color: 'var(--primary-color)', py: 3, px: 8, fontSize: '18px', fontWeight: 'bold', '&:hover': {
                                             backgroundColor: 'none',
                                         },
                                     }}>Explore Now</ButtonComponent>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

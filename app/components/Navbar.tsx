@@ -27,7 +27,7 @@ const Navbar: React.FC <NavbarProps>= ({mode="default"}) => {
   return (
   //  <div className='w-full'>
       <div className={isModalOpen ? 'blur-background w-full' : 'w-full'}> 
-      <nav className='w-full bg-white shadow-md sticky z-50 top-0 p-2 flex flex-row items-center justify-between lg:justify-around'>
+      <nav className='w-full bg-white shadow-md sticky z-500 top-0 p-2 flex flex-row items-center justify-between lg:justify-around'>
       <div className='flex flex-row justify-between mx-3 lg:mx-0 lg:justify-around items-center w-full'>
         
           <img src="/logo.svg" className='p-2' alt="logo" />
@@ -53,10 +53,10 @@ const Navbar: React.FC <NavbarProps>= ({mode="default"}) => {
         )}
         {mode==="loggedIn" && (
           <>
-          <li><Link href="/dashboard" className=' decoration-none my-2 lg:m-1 p-2 px-4'>Home</Link></li>
-          <li><Link href="/dashboard/explore" className=' decoration-none my-2 lg:m-1 p-2 px-4'>Explore</Link></li>
-          <li><Link href="/dashboard/trips" className=' decoration-none my-2 lg:m-1 p-2 px-4'>Trips</Link></li>
-          <li ><Link href="/dashboard#about" className='decoration-none my-2 lg:m-1 p-2'>About</Link></li>
+          <li><Link href="/dashboard" className=' decoration-none my-1 lg:m-1 p-2 px-4'>Home</Link></li>
+          <li><Link href="/dashboard/explore" className=' decoration-none my-1 lg:m-1 p-2 px-4'>Explore</Link></li>
+          <li><Link href="/dashboard/trips" className=' decoration-none my-1 lg:m-1 p-2 px-4'>Trips</Link></li>
+          <li><Link href="/dashboard#about" className='decoration-none my-1 lg:m-1 p-2'>About</Link></li>
           </>
           )}
 

@@ -45,6 +45,6 @@ return response.data;
 };
 
 export const sendGoogleOAuthTokenApi = async (data: any) => {
-    const response = await API.post('/auth/convert-token', data);
+    const response = await API.post('/auth/convert-token/', data);
     return response.data;
   };

@@ -4,7 +4,11 @@ import InputComponent from "../ui/InputComponent";
 import { useState,useEffect } from "react";
 import { Skeleton } from "@mui/material";
 
-const Explore: React.FC = () => {
+interface exploreProps{
+    mode?:"default"|"loggedIn";
+}
+
+const Explore: React.FC<exploreProps> = ({mode="default"}) => {
     const [search, setSearch] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -40,7 +44,7 @@ const Explore: React.FC = () => {
                             alt=""
                             className="absolute left-6 bottom-9" />
                         <input type="text"
-                            className=" text-sm font-normal  mb-4 p-3 pl-12 border rounded-2xl border-black w-full outline-none"
+                            className=" text-sm font-normal z-10 mb-4 p-3 pl-12 border rounded-2xl border-black w-full outline-none"
                             placeholder="Search any place, restaurants.."
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -54,6 +58,14 @@ const Explore: React.FC = () => {
                             <img src="/restraunt.svg" alt="" />
                             Restraunts and cafe
                         </button>
+                        {mode==="loggedIn" && (
+                            <button className="border border-gray-400 flex gap-2 rounded-2xl p-2 px-4">
+                                    <img src="/flight.svg" alt="" />
+                                    Flights
+                            </button>
+                        )
+
+                        }
                     </div>
                     <div className="text-center py-10 text-black text-xl lg:text-2xl  font-semibold ">Or Start with these popular picks</div>
                     </section>

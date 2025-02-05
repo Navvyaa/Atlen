@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 import ButtonComponent from '../ui/ButtonComponent';
 import InputComponent from '../ui/InputComponent';
 import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
@@ -14,11 +14,10 @@ import Cookies from 'js-cookie';
 import Loading from '../ui/Loading';
 import { checkEmail } from '@/app/features/auth/slices/authThunk';
 import { AppDispatch } from '@/app/store/store';
-import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import { sendGoogleOAuthTokenToBackend } from '../../features/auth/slices/authThunk';
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
-import { on } from 'events';
 
 interface LoginModalProps {
   open: boolean;
