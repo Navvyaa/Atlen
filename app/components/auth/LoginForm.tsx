@@ -97,7 +97,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
     {/* {showLoginModal && <LoginModal open={isModalOpen} onClose={closeModal} step={1} />} */}
     
     {!showForgotPassword && (
-      <div className={isModalOpen  ? 'blur-background' : ''}>
+      // <div className={isModalOpen  ? 'blur-background' : ''}>
         <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal}>
 
           <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
@@ -141,7 +141,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
             </p>
           </Box>
         </ModalComponent>
-      </div>
+      // </div>
       )}
 
     </>

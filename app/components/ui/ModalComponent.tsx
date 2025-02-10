@@ -7,14 +7,19 @@ interface ModalComponentProps {
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  mode?:'default'|'loggedIn';
+  isInviteOpen?:boolean;
 }
 
-const ModalComponent: React.FC<ModalComponentProps> = ({ children, isOpen, onClose }) => {
+const ModalComponent: React.FC<ModalComponentProps> = ({ children, isOpen, onClose, mode='default' ,isInviteOpen=false }) => {
   const router = useRouter();
 
   const handleBackdropClick = () => {
     onClose();
     router.push('/'); 
+    if (mode==='loggedIn') {
+      router.push('/dashboard');
+    }
   };
 
   return (
@@ -31,7 +36,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ children, isOpen, onClo
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '100%',
-          maxWidth: "460px",
+          maxWidth: isInviteOpen ? "760px" : "460px",
           bgcolor: 'background.paper',
           border: 'none',
           boxShadow: 24,
@@ -42,9 +47,11 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ children, isOpen, onClo
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          transition: 'max-width 0.3s ease-in-out',
         }}
       >
-        <Image src="./logo.svg" alt="logo" className=' mb-4 ' width={60} height={60} />
+        {mode==='default' &&  <Image src="./logo.svg" alt="logo" className=' mb-4 ' width={60} height={60} />}
+       
         {children}
       </Box>
     </Modal>

@@ -10,7 +10,7 @@ const HomeScreen: React.FC = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
 
     return (
-        <div className={isModalOpen ? 'blur-background ' : ''}>
+      
 
             <section className="h-full md:w-full bg-white">
 
@@ -200,7 +200,7 @@ const HomeScreen: React.FC = () => {
                     <Footer />
                 </section>
             </section>
-        </div>
+      
 
     );
 }

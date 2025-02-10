@@ -35,7 +35,7 @@ const Explore: React.FC<exploreProps> = ({mode="default"}) => {
 
     return (
         // <div>Explore</div>
-        <div className={isModalOpen ? "blur-background " : ""}>
+        <div className="w-full">
             <section className="bg-white m-1 h-full  pb-12">
                 <section className="sm:w-[600px] mx-auto flex flex-col justify-center items-center py-8 p-2   lg:py-10 ">
                     <div className="text-center pb-8 lg:pb-10 text-black text-3xl sm:text-5xl font-semibold ">Start your journey here.</div>

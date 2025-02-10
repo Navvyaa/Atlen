@@ -14,7 +14,8 @@ interface InputComponentProps {
   error?: boolean;
   onInputChange?: () => void;
   showPasswordRequirements?: boolean;
-
+  onClick?: () => void;
+  // readonly?: string;
 }
 
 const InputComponent: React.FC<InputComponentProps> = ({
@@ -32,7 +33,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
-  const currentPath = usePathname();
+  // const currentPath = usePathname();
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
@@ -40,8 +41,10 @@ const InputComponent: React.FC<InputComponentProps> = ({
     event.preventDefault();
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (type === 'password') {
+      setPassword(e.target.value);
+    }
     onChange(e);
     if (onInputChange) {
       onInputChange();
@@ -74,7 +77,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
           setShowPassword(false);
         }}
         placeholder={placeholder}
-        onChange={handlePasswordChange}
+        onChange={handleInputChange}
         required={required}
         inputProps={type === 'password' ? { maxLength: 20 } : {maxLength: 50}}
         error={error}
