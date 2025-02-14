@@ -7,9 +7,13 @@ import ButtonComponent from "../ui/ButtonComponent";
 import Footer from '../Footer';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useModal } from '@/app/context/ModalContext';
+import CreateTrip from '../../components/user/CreateTrip'; // Adjust the path as necessary
 
 const ClientDashboard: React.FC = () => {
   const router = useRouter();
+     const { isModalOpen, openModal, closeModal } = useModal();
+  
   const accessToken = Cookies.get('accessToken');
 
   useEffect(() => {
@@ -21,6 +25,10 @@ const ClientDashboard: React.FC = () => {
 
   return (
     <div className="h-full w-full bg-white ">
+      <div className='w-full mx-auto '>
+     
+      </div>
+              
       <section className="h-full w-full bg-[url('/bg-hero.svg')] bg-fill bg-no-repeat bg-center relative" >
         <section className="w-full bg-[#EDF2F4] lg:pl-16 md:pt-8   pb-4 relative lg:flex-row flex-col flex md:justify-between ">
           <div className="order-2 lg:order-1 text-center lg:text-left ">
@@ -40,21 +48,47 @@ const ClientDashboard: React.FC = () => {
             <div className="lg:text-7xl text-6xl lg:text-left text-center z-20 lg:static relative mt-24 font-bold leading-42"> Travel <span className="text-primary">top</span> <br /> <span className="text-primary">destinations</span> <br /> of the world</div>
             <div className="text-[#888888] text-lg  font-semibold py-12 leading-7 w-full relative ">Effortlessly plan trips, track budgets, and explore destinations tailored to you.</div>
             <div className="flex gap-4 lg:text-left justify-center lg:justify-start text-center mb-6">
-
-              <ButtonComponent sx={{ color: 'white', py: 3, px: 3, fontSize: '20px', fontWeight: 'regular' }}>Create Trip</ButtonComponent>
-              {/* <LoginModal open={isModalOpen} onClose={closeModal} step={1} /> */}
+            
+            <ButtonComponent  
+            onClick={()=>openModal()} 
+              sx={{ 
+                color: 'white',
+                 py: 3,
+                  px: 3,
+                   fontSize: '20px', 
+                   fontWeight: 'regular' ,
+                   zIndex: 38,
+                   }}>
+              Create Trip
+              </ButtonComponent>
+              <CreateTrip open={isModalOpen} onClose={closeModal} />
+                               
               <div className="lg:block hidden border border-primary rounded-[17px]">
-                                    <ButtonComponent variant="outlined" onClick={() => {router.push("/dashboard/explore")}} sx={{
-                                        backgroundColor: 'transparent', borderColor: 'var(--primary-color)', color: 'var(--primary-color)', py: 3, px: 8, fontSize: '18px', fontWeight: 'bold', '&:hover': {
+                <Link href="/dashboard/explore">
+                                    <ButtonComponent  variant="outlined"
+                                     onClick={() => {router.push('/dashboard/explore/')}} 
+                                     sx={{
+                                        backgroundColor: '#EDF2F4',
+                                         borderColor: 'var(--primary-color)', 
+                                         color: 'var(--primary-color)',
+                                          py: 3,
+                                          px: 8,
+                                          zIndex: 38,
+                                          fontSize: '18px',
+                                          fontWeight: 'bold',
+                                          '&:hover': {
                                             backgroundColor: 'none',
                                         },
                                     }}>Explore Now</ButtonComponent>
+                                    </Link>
                                 </div>
             </div>
           </div>
-          <div className="relative z-10 order-1  hidden lg:block lg:order-2"> <img src="/Hero.svg" alt="" /></div>
+          <div className="relative order-1  hidden lg:block lg:order-2">
+             <img src="/Hero.svg" alt="" />
+             </div>
           <div className="hidden lg:absolute inset-0 lg:flex justify-center items-end">
-            <img src="/mapbase.svg" alt="" className=" opacity-90" />
+            <img src="/mapbase.svg" alt=""  />
           </div>
         </section>
 
@@ -114,7 +148,8 @@ const ClientDashboard: React.FC = () => {
             <span className="text-[#1e344f] relative z-40 ml-2 text-5xl lg:text-7xl font-semibold">Use AI to plan your trips</span>
           </div>
           <div className='my-8 '>
-            <ButtonComponent sx={{ color: 'white', py: 3, px: 3, fontSize: '20px', fontWeight: 'regular' }}>Create Trip</ButtonComponent>
+            <ButtonComponent  onClick={openModal} sx={{ color: 'white', py: 3, px: 3, fontSize: '20px', fontWeight: 'regular' }}>Create Trip</ButtonComponent>
+            <CreateTrip open={isModalOpen} onClose={closeModal} />
           </div>
           <div className='flex flex-row gap-6 items-start overflow-x-auto justify-center pb-4'>
 

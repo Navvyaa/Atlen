@@ -68,7 +68,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
       //   snackbarRef.current?.showSnackbar('Please check your internet connection', 'error');
       //   return;
       // }
-
+      if (!response || !response.data) {
+        console.log("sdfdf")
+        snackbarRef.current?.showSnackbar('Please check your internet connection', 'error');
+        // throw new Error('Invalid response from server');
+      }
+  
       if (!response.data.is_registered) {
         setShowRegisterForm(true);
       } else if (response.data.is_registered && response.data.is_verified) {
@@ -76,11 +81,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
       }
       // onClose();
     } catch (error: any) {
-      if (error.code === 'ERR_INTERNET_DISCONNECTED' || error.message?.includes('network')) {
-        snackbarRef.current?.showSnackbar('Please check your internet connection', 'error');
-      }
+      // if (error.message?.includes('Network Error')) {
+      //   snackbarRef.current?.showSnackbar('Please check your internet connection', 'error');
+      // } 
+      if (error.message === 'Please check your internet connection') {
+        snackbarRef.current?.showSnackbar(error.message, 'error');
+      } 
       else {
-        snackbarRef.current?.showSnackbar(error.message || 'An unknown error occurred', 'error');
+        snackbarRef.current?.showSnackbar(error.message || 'An error occurred, please try again later', 'error');
       }
     } finally {
       setLoading(false);

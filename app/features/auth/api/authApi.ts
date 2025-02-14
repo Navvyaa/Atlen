@@ -4,11 +4,10 @@ import { checkEmailRequest, loginRequest, registerRequest, verifyOtpRequest, for
 
 export const checkEmailApi = async (data: checkEmailRequest) => {
 const response = await API.post('/api/auth/check-email/', data);
-// if (response.net==="ERR_INTERNET_DISCONNECTED"||!response.data ) {
-//   // Network error or no internet connection
-//   return('Please check your network connection');
-// }
+if(response.data)
 return response.data;
+else
+return "No internret";
 };
 
 export const loginApi = async (data: loginRequest) => {

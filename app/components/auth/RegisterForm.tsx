@@ -29,7 +29,7 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ step: initialStep,onClose }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
-   const {  openModal, closeModal } = useModal();
+  
   const dispatch = useDispatch<AppDispatch>();
   const email = useSelector((state: RootState) => state.auth.email);
   const [firstName, setFirstName] = useState<string>('');
@@ -185,11 +185,7 @@ const handleResendOtp = async () => {
   };
 
   return (
-    
-    <div className={isModalOpen ? 'blur-background' : ''}>
-
-
-      <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal} >
+     <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal} >
         {step === 1 && (
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, mx: 2, width: '100%' }}>
             <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
@@ -254,7 +250,7 @@ const handleResendOtp = async () => {
           <OtpPage onVerify={handleVerifyOtp} onResend={handleResendOtp} snackbarRef={snackbarRef} isResendDisabled={isResendDisabled}/>
         )}
       </ModalComponent>
-    </div >
+    
       
 
   );

@@ -208,7 +208,7 @@ const ForgotPasswordForm: React.FC = () => {
     {showLoginForm && <LoginForm  />}
     {!showLoginForm &&  (
     
-    <div className={isModalOpen ? 'blur-background' : ''}>
+    // <div className={isModalOpen ? 'blur-background' : ''}>
       <ModalComponent isOpen={isModalOpen} onClose={handleCloseModal}>
         {step === 1 ? <BackButton onBack={handleBack}/> : step === 2 ? <BackButton onBack={() => setStep(1)} /> : null}
 
@@ -280,7 +280,7 @@ const ForgotPasswordForm: React.FC = () => {
           </>
         )}
       </ModalComponent>
-    </div>
+    
       )};
       </>
   );
