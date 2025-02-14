@@ -16,28 +16,32 @@ interface CreateTripProps {
 
 const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
   const [tripName, setTripName] = useState<string>("");
-  const [destination, setDestination] = useState<string>('');
+  const [destination, setDestination] = useState<string>(String());
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+ 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState<boolean>(false);
   const [friends, setFriends] = useState<string[]>([]);
-  const [nameError, setNameError] = useState<boolean>(false);
+  // const [nameError, setNameError] = useState<boolean>(false);
+
   const handlecreateTrip = () => {
     console.log(tripName,destination,startDate,endDate,"hi" ,friends);
     // console.log("hi");
   }
 
   const today = new Date().toISOString().split("T")[0];
+
+ useEffect(() => {
+    console.log("CreateTrip Mounted");
+    return () => console.log("CreateTrip Unmounted");
+  }, []);
+  
+// useEffect(() => {
+//   setTripName(""); 
+//   setDestination("");// Ensure it's initialized on the client side
+// }, []);
+
  
-  console.log("Render tripName:", tripName === undefined ? "undefined" : tripName === null ? "null" : `"${tripName}"`);
-  useEffect(() => {
-    console.log("Updated tripName:", tripName);
-  }, [tripName]);
-  
-  useEffect(() => {
-    console.log("Updated destination:", destination);
-  }, [destination]);
-  
   return (
 
 
@@ -50,20 +54,34 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
         transform: isInviteModalOpen ? { md: 'translateX(-38%)' } : 'none',
         transition: 'transform 0.3s ease-in-out'
       }}>
+        {/* <input type="text" onChange={(e)=>setNewInput(e.target.value)} placeholder="Can you type here?" /> */}
+        {/* <div contentEditable style={{ border: "1px solid black", padding: "10px" }}>
+  Can you type here?
+</div> */}
         <InputComponent
-          label="Trip Name"
-          // error={nameError}
-          // onInputChange={() => setNameError(false)}
-          type="text"
-          value={tripName }
-          placeholder="Give your trip a name.."
-          onChange={(e:React.ChangeEvent<HTMLInputElement>) => 
-            setTripName(e.target.value)}
+        label='Trip Name'
+        type='text'
+        value={tripName}
+        placeholder="Give your trip a name"
+        onChange={(e:React.ChangeEvent<HTMLInputElement>)=> setTripName(e.target.value)}
         />
+         {/* <label htmlFor="tripName" className='text-lg font-semibold pb-2'>Trip Name</label>
+            <input
+              id="tripName"
+              type="text"
+              value={tripName || ""}
+              onChange={(e)=>{
+                setTripName(e.target.value)
+                console.log("hi");
+              }}
+              placeholder="Give your trip a name"
+             
+              className='border border-gray-300 rounded-2xl p-3 focus:outline-none focus:ring-2 focus:ring-primary-hover hover:border-primary'
+            />  */}
          <InputComponent
           label="Which places are you going"
           type="text"
-          value={destination}
+          value={destination || ""}
           placeholder="Select Countries"
           onChange={(e) => setDestination(e.target.value)}
                        />
@@ -161,10 +179,10 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
           <InputComponent
             label='Add a travel buddy to your trip'
             type='text'
-            // value={friends[0]||""}
+            value={friends[0] || ""}
             placeholder='Enter email address'
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFriends([...friends, e.target.value]);
+              setFriends([ e.target.value]);
             }}
           />
         </div>

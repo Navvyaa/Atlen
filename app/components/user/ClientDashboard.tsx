@@ -14,14 +14,14 @@ const ClientDashboard: React.FC = () => {
   const router = useRouter();
      const { isModalOpen, openModal, closeModal } = useModal();
   
-  // const accessToken = Cookies.get('accessToken');
+  const accessToken = Cookies.get('accessToken');
 
-  // useEffect(() => {
-  //   if (!accessToken) {
-  //     console.log("No Access Token found");
-  //     router.push('/');
-  //   }
-  // }, [accessToken, router]);
+  useEffect(() => {
+    if (!accessToken) {
+      console.log("No Access Token found");
+      router.push('/');
+    }
+  }, [accessToken, router]);
 
   return (
     <div className="h-full w-full bg-white ">
@@ -50,9 +50,7 @@ const ClientDashboard: React.FC = () => {
             <div className="flex gap-4 lg:text-left justify-center lg:justify-start text-center mb-6">
             
             <ButtonComponent  
-            onClick={()=>{
-              console.log("create trip is clicked");
-              openModal();}} 
+            onClick={()=>openModal()} 
               sx={{ 
                 color: 'white',
                  py: 3,
@@ -87,10 +85,10 @@ const ClientDashboard: React.FC = () => {
             </div>
           </div>
           <div className="relative order-1  hidden lg:block lg:order-2">
-             <img src="/Hero.svg" alt="" className='pointer-events-none'/>
+             <img src="/Hero.svg" alt="" />
              </div>
           <div className="hidden lg:absolute inset-0 lg:flex justify-center items-end">
-            <img src="/mapbase.svg" alt=""  className='pointer-events-none'/>
+            <img src="/mapbase.svg" alt=""  />
           </div>
         </section>
 
