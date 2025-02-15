@@ -1,12 +1,14 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import { Box } from '@mui/material';
 import ModalComponent from '../ui/ModalComponent';
 import InputComponent from '../ui/InputComponent';
 import ButtonComponent from '../ui/ButtonComponent';
 import Image from 'next/image';
-// import {DateCalendar} from '@mui/x-date-pickers/DateCalendar';
+import SnackbarComponent, {SnackbarRef} from '../ui/SnackbarComponent';
 import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface CreateTripProps {
   open: boolean;
@@ -19,29 +21,45 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
   const [destination, setDestination] = useState<string>(String());
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const snackbarRef = useRef<SnackbarRef>(null);
  
   const [isInviteModalOpen, setIsInviteModalOpen] = useState<boolean>(false);
-  const [friends, setFriends] = useState<string[]>([]);
-  // const [nameError, setNameError] = useState<boolean>(false);
-
-  const handlecreateTrip = () => {
-    console.log(tripName,destination,startDate,endDate,"hi" ,friends);
-    // console.log("hi");
-  }
+  const [friends, setFriends] = useState<string[]>(['']); // Initialize with one empty inputconst 
+  // [nameError, setNameError] = useState<boolean>(false);
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/;
+  const handlecreateTrip =async (event: React.FormEvent) => {
+    event.preventDefault();
+    // console.log(tripName,destination,startDate,endDate,"hi" ,friends);T
+    if(!tripName.trim() || !destination.trim() || !startDate || !endDate ){
+      snackbarRef.current?.showSnackbar('Enter all fields', 'error');
+      return;
+    }
+    if (friends.length > 1 && friends.some(friend => friend.trim() === '')) {
+      snackbarRef.current?.showSnackbar('Please enter email addresses for your friends', 'error');
+      return;
+    }
+    // if()
+    if ( friends[0].trim() && !emailRegex.test(friends[0].trim())) {
+      snackbarRef.current?.showSnackbar('Please provide valid email address', 'error');
+      return;
+    }
+    
+    if (friends.some(friend => friend.trim() && !emailRegex.test(friend.trim()))) {
+      snackbarRef.current?.showSnackbar('Please provide valid email addresses ', 'error');
+      return;
+    }
+    console.log(tripName, destination, startDate, endDate, friends);
+    onClose();
+    setTripName("");
+    setDestination("");
+    setStartDate("");
+    setEndDate("");
+    setFriends(['']);
+      }
 
   const today = new Date().toISOString().split("T")[0];
 
- useEffect(() => {
-    console.log("CreateTrip Mounted");
-    return () => console.log("CreateTrip Unmounted");
-  }, []);
-  
-// useEffect(() => {
-//   setTripName(""); 
-//   setDestination("");// Ensure it's initialized on the client side
-// }, []);
 
- 
   return (
 
 
@@ -54,6 +72,9 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
         transform: isInviteModalOpen ? { md: 'translateX(-38%)' } : 'none',
         transition: 'transform 0.3s ease-in-out'
       }}>
+        <div className=' absolute bottom-00 '>
+         <SnackbarComponent ref={snackbarRef} message={''} severity={'success'} />
+         </div>
         {/* <input type="text" onChange={(e)=>setNewInput(e.target.value)} placeholder="Can you type here?" /> */}
         {/* <div contentEditable style={{ border: "1px solid black", padding: "10px" }}>
   Can you type here?
@@ -88,7 +109,7 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
         <div className='flex flex-row relative gap-4 justify-between'>
           
         <div className='w-full flex flex-col'>
-            <label htmlFor="startDate" className='text-lg font-semibold pb-2'>Start Date</label>
+            <label htmlFor="startDate" className='text-md font-semibold pb-2'>Start Date</label>
             <input
               id="startDate"
               type="date"
@@ -101,14 +122,14 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
               }}
               min={today}
              
-              className='border border-gray-300 rounded-2xl p-3 focus:outline-none focus:ring-2 focus:ring-primary-hover hover:border-primary'
+              className='border border-gray-300 rounded-2xl p-3 focus:outline-none focus:ring-2 focus:ring-primary-hover hover:border-primary '
             />
           </div> 
          
           <Image src='/arrow-left.svg' width={24} height={24} alt='arrow' className='pt-6' />
          
            <div className='w-full flex flex-col'>
-            <label htmlFor="endDate" className='text-lg font-semibold pb-2'>End Date</label>
+            <label htmlFor="endDate" className='text-md font-semibold pb-2'>End Date</label>
             <input
               id="endDate"
               type="date"
@@ -176,15 +197,57 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
               />
             </IconButton>
           </div>
-          <InputComponent
-            label='Add a travel buddy to your trip'
-            type='text'
-            value={friends[0] || ""}
-            placeholder='Enter email address'
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFriends([ e.target.value]);
-            }}
+         
+          <div className="space-y-1 ">
+            <div className='lg:max-h-[300px] max-h-[120px] w-full overflow-y-auto no-scrollbar'>
+      {friends.map((friend, index) => (
+        <div key={index} className="flex items-center reltive ">
+          
+          <input type="text" 
+          value={friend}
+          placeholder='Enter email address'
+          className='p-2 pl-3 m-1 mr-4 rounded-xl w-full'
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const newFriends = [...friends];
+            newFriends[index] = e.target.value;
+            setFriends(newFriends);
+
+          }}
           />
+          <IconButton
+           disabled={friends.length === 1} // Disable delete button for last remaining input
+  
+            onClick={() => {
+              const newFriends = friends.filter((_, i) => i !== index);
+              setFriends(newFriends);
+            }}
+            
+          >
+            <DeleteIcon className='absolute right-1'/>
+          </IconButton>
+        </div>
+      ))}
+      </div>
+{friends.length < 10 && (
+        <button
+          onClick={() => {
+            if (friends.length < 12) {
+              setFriends([...friends, '']);
+            }
+          }}
+          className='  p-2 rounded-3xl font-semibold text-gray-600 flex items-center'
+        >
+          {/* Add <span className='text-xl px-2 pb-1'> + </span> */}
+          <AddIcon sx={{ mr: 1 }} />
+          
+        </button>
+      )}
+      {/* {friends.length >= 12 && (
+        <p className="text-red-500 text-sm mt-2">
+          Maximum 12 friends can be added
+        </p>
+      )} */}
+        </div>
         </div>
       )}
       <div className='md:hidden'>
