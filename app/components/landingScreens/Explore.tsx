@@ -31,7 +31,7 @@ const Explore: React.FC<exploreProps> = ({ mode = "default" }) => {
     const europe=[
         {img:"/Finland.png",name:"Finland"},
         {img:"/Austria.png",name:"Austria"},
-        {img:"/SwitzerLand.png",name:"SwitzerLand"},
+        {img:"/Switzerland.png",name:"SwitzerLand"},
         {img:"/Italy.png",name:"Italy"},
         {img:"/France.png",name:"France"},
         {img:"/Turkey.png",name:"Turkey"},
@@ -138,7 +138,7 @@ const Explore: React.FC<exploreProps> = ({ mode = "default" }) => {
                         <div className="flex flex-row mx-4 lg:gap-10 lg:ml-12 gap-6 no-scrollbar  overflow-x-auto h-[300px] ">
                             {destinations.map((destination, index) => (
                                 <div key={index} className="w-[210px] bg-white shadow-lg border border-gray-400 h-[270px] rounded-3xl relative flex-shrink-0">
-                                    <img src={destination.img} className="object-cover w-full h-[60%] rounded-t-3xl" alt="destination" />
+                                    <img src={destination.img} className="object-cover w-full h-[60%] rounded-t-3xl" alt="" />
                                     <div className="flex flex-col p-4">
                                         <p className="font-semibold text-xl">{destination.name}</p>
                                         <p className="font-normal text-lg">{destination.location}</p>
@@ -165,7 +165,7 @@ const Explore: React.FC<exploreProps> = ({ mode = "default" }) => {
                                 destinations.map((destination, index) => (
                                     <div key={index} className="rounded-2xl w-[210px] h-[280px] flex-shrink-0  ">
                                         <div className="relative">
-                                            <img src={destination.img} alt="destination" className="object-cover rounded-2xl w-full " />
+                                            <img src={destination.img} alt="" className="object-cover rounded-2xl w-full " />
                                             <p className=" left-4 text-white text-ellipsis text-lg absolute bottom-2 mx-auto">{destination.name}</p>
                                         </div>
                                     </div>
@@ -225,7 +225,7 @@ const Explore: React.FC<exploreProps> = ({ mode = "default" }) => {
                             key={index}
                             className="w-[250px] h-full my-4 relative rounded-2xl flex-shrink-0"
                             >
-                                <img src={place.img} alt="place"  className="object-cover w-full rounded-2xl"/>
+                                <img src={place.img} alt=""  className="object-cover w-full rounded-2xl"/>
                                 <div className="absolute bottom-2 w-full text-center">
                                     <p className=" mx-auto  font-semibold text-md text-white">{place.text}</p>
                                     <p className="mx-auto text-2xl left-2 p-8 mb-4 font-bold text-white">{place.name}</p>
