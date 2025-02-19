@@ -174,19 +174,19 @@ const Explore: React.FC<exploreProps> = ({ mode = "default" }) => {
                         </div>
 
                         <p className="font-semibold text-2xl w-full ml-8  my-8 lg:block hidden">Explorations Far Away</p>
-                        <div className="lg:flex flex-row lg:w-full mx-4 gap-5 no-scrollbar w-[1000px]  hidden h-[550px] overflow-x-scroll ">
+                        <div className="flex flex-row lg:w-full px-6 gap-5 no-scrollbar w-[1000px]   h-[550px] overflow-x-scroll ">
                             <div className="flex flex-col gap-5 w-1/3 ">
-                                <div className="w-full relative bg-gray-400 rounded-xl h-1/2">
+                                <div className="w-full relative  rounded-xl h-1/2">
                                     <img src="/rectangle.svg" alt="" className="rounded-xl w-full h-full relative object-cover" />
                                     <p className="font-semibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
                                 </div>
                                 <div className="flex flex-row gap-5 w-full h-1/2">
-                                    <div className="bg-slate-300 relative w-1/2 h-full rouned-xl">
+                                    <div className=" relative w-1/2 h-full rouned-xl">
                                         <img src="/rectangle.svg" alt="" className="rounded-xl h-full w-full object-cover relative" />
                                         <p className="font-smibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
 
                                     </div>
-                                    <div className="bg-slate-300 relative h-full w-1/2 rouned-xl">
+                                    <div className=" relative h-full w-1/2 rouned-xl">
                                         <img src="/rectangle.svg" alt="" className="rounded-xl h-full w-full object-cover relative" />
                                         <p className="font-semibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
 
@@ -194,31 +194,24 @@ const Explore: React.FC<exploreProps> = ({ mode = "default" }) => {
                                 </div>
                             </div>
 
-                            <div className="bg-slate-300 w-1/3 relative rouned-xl">
+                            <div className=" w-1/3 relative rouned-xl">
                                 <img src="/rectangle.svg" alt="" className="rounded-xl h-full w-full relative object-cover" />
                                 <p className="font-semibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
 
                             </div>
-                            <div className="flex flex-col gap-5 w-1/3 ">
-                                <div className="w-full relative bg-gray-400  rounded-xl h-1/2">
+                            <div className="flex flex-col gap-5 w-1/3 h-full">
+                                <div className="w-full relative  rounded-xl h-1/2">
                                     <img src="/rectangle.svg" alt="" className="rounded-xl w-full h-full relative object-cover" />
                                     <p className="font-semibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
                                 </div>
-                                <div className="flex flex-row gap-5 w-full h-1/2">
-                                    <div className="bg-slate-300 h-full relative w-1/2 rouned-xl">
-                                        <img src="/rectangle.svg" alt="" className="rounded-xl h-full w-full  object-cover relative" />
-                                        <p className="font-semibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
-
-                                    </div>
-                                    <div className="bg-slate-300 h-full w-1/2 relative rouned-xl">
-                                        <img src="/rectangle.svg" alt="" className="rounded-xl h-full w-full object-cover relative" />
-                                        <p className="font-semibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
-
-                                    </div>
+                                <div className="w-full relative   rounded-xl h-[46%]">
+                                    <img src="/rectangle.svg" alt="" className="rounded-xl w-full h-full relative object-cover" />
+                                    <p className="font-semibold text-lg text-black absolute bottom-2 left-4">Paradise Beach</p>
                                 </div>
+                                
                             </div>
                         </div>
-                        <p className="font-semibold text-2xl w-full  ml-6 lg:ml-12  my-8 ">South East Asian Vacations</p>
+                        <p className="font-semibold text-2xl w-full  ml-6 lg:ml-12  mt-12">South East Asian Vacations</p>
                         <div className="flex flex-row gap-8 ml-4 lg:ml-10 my-3 overflow-x-auto no-scrollbar ">
                         {SouthEastAsian.map((place,index)=>(
                             <div 

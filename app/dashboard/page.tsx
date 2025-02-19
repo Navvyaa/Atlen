@@ -9,12 +9,12 @@ import { redirect } from 'next/navigation';
 
 
 export default async function Page() {
-  const cookieStore =  await cookies();
-  const accessToken = cookieStore.get('accessToken');
+  // const cookieStore =  await cookies();
+  // const accessToken = cookieStore.get('accessToken');
 
-  if (!accessToken) {
-    redirect('/');
-  }
+  // if (!accessToken) {
+  //   redirect('/');
+  // }
 
   return (
     <div className='w-full h-full relative'>

@@ -14,14 +14,14 @@ const ClientDashboard: React.FC = () => {
   const router = useRouter();
      const { isModalOpen, openModal, closeModal } = useModal();
   
-  const accessToken = Cookies.get('accessToken');
+  // const accessToken = Cookies.get('accessToken');
 
-  useEffect(() => {
-    if (!accessToken) {
-      console.log("No Access Token found");
-      router.push('/');
-    }
-  }, [accessToken, router]);
+  // useEffect(() => {
+  //   if (!accessToken) {
+  //     console.log("No Access Token found");
+  //     router.push('/');
+  //   }
+  // }, [accessToken, router]);
 
   return (
     <div className="h-full w-full bg-white ">
