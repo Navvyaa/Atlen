@@ -22,7 +22,7 @@ const CountryDetails = ({ params }: CountryPageProps) => {
       </div>
       </div>
       
-      <DestinationOverview/>
+      <DestinationOverview country={countryName}/>
 
     </div>
   );
