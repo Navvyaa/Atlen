@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 export const postTripAPI = async (data: PostTripRequest) => {
     const token = Cookies.get('accessToken');
-    const response = await API.post('/api/trip/', data, {
+    const response = await API.post('/api/trips/', data, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -14,7 +14,7 @@ export const postTripAPI = async (data: PostTripRequest) => {
 
 export const getTripsAPI = async () => {
     const token = Cookies.get('accessToken');
-    const response = await API.get('/api/trip/', {
+    const response = await API.get('/api/trips/', {
         headers: {
             Authorization: `Bearer ${token}`
         }

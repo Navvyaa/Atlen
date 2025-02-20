@@ -3,10 +3,12 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { IconButton, Tooltip } from '@mui/material';
+// import { SxProps, Theme } from '@mui/material';
 
 
 interface BackButtonProps {
   onBack?: () => void;
+  // sx?: SxProps<Theme>;
 }
 
 const BackButton: React.FC<BackButtonProps> = ({ onBack }) => {

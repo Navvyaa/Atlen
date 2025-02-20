@@ -151,7 +151,7 @@ const ClientDashboard: React.FC = () => {
             <ButtonComponent  onClick={openModal} sx={{ color: 'white', py: 3, px: 3, fontSize: '20px', fontWeight: 'regular' }}>Create Trip</ButtonComponent>
             <CreateTrip open={isModalOpen} onClose={closeModal} />
           </div>
-          <div className='flex flex-row gap-6 items-start overflow-x-auto justify-center pb-4'>
+          <div className='flex flex-row gap-6 items-start no-scrollbar overflow-x-auto justify-center pb-4'>
 
             {Array.from({ length: 4 }).map((_, index) => (
               <div key={index} className='w-[280px] h-[280px] rounded-2xl relative flex-shrink-0'>

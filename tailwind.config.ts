@@ -13,6 +13,8 @@ export default {
         foreground: "var(--foreground)",
         primary: "var(--primary-color)",
         "primary-hover": "var(--primary-color-hover)", 
+        secondary: "var(--secondary-color)",
+        "secondary-hover": "var(--secondary-color-hover)",
       },
     },
   },

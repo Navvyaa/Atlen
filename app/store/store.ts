@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/slices/authSlice';
-
+import tripReducer from '../features/trips/slices/tripSlice';
 const store = configureStore({
   reducer: {
-    auth: authReducer, // Add other slices as needed
+    auth: authReducer,
+    trip: tripReducer,
   },
 });
 

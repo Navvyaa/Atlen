@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from 'react';
+import React, {  useState, useRef } from 'react';
 import { Box,Slider } from '@mui/material';
 import ModalComponent from '../ui/ModalComponent';
 import InputComponent from '../ui/InputComponent';
@@ -9,6 +9,11 @@ import SnackbarComponent, { SnackbarRef } from '../ui/SnackbarComponent';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+// First, import the necessary Redux hooks and actions
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/store/store';
+import { postTrip } from '@/app/features/trips/slices/tripThunk';
+import { PostTripRequest } from '@/app/features/trips/types';
 
 interface CreateTripProps {
   open: boolean;
@@ -17,12 +22,14 @@ interface CreateTripProps {
 }
 
 const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
-  const [tripName, setTripName] = useState<string>("");
+  const [tripName, setTripName] = useState<string>('');
   const [destination, setDestination] = useState<string>(String());
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [step, setStep] = useState<number>(1);
   const snackbarRef = useRef<SnackbarRef>(null);
+  const dispatch = useDispatch<AppDispatch>();
+
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState<boolean>(false);
   const [friends, setFriends] = useState<string[]>(['']); // Initialize with one empty inputconst 
@@ -54,24 +61,64 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
       snackbarRef.current?.showSnackbar('Please provide valid email addresses ', 'error');
       return;
     }
-    setStep(2);
-    setIsInviteModalOpen(false);
-    if (step == 2) {
-      // onClose();
+    // setStep(2);
+    // setIsInviteModalOpen(false);
+    // if (step == 2) {
+    //   // onClose();
 
-      console.log(tripName, destination, startDate, endDate, friends,travelType,budget);
-      onClose();
-      setStep(1);
-      setTripName("");
-      setDestination("");
-      setStartDate("");
-      setEndDate("");
-      setFriends(['']);
-      setTravelType("");
-      setBudget(0);
-    }
+    //   console.log(tripName, destination, startDate, endDate, friends,travelType,budget);
+    //   onClose();
+    //   setStep(1);
+    //   setTripName("");
+    //   setDestination("");
+    //   setStartDate("");
+    //   setEndDate("");
+    //   setFriends(['']);
+    //   setTravelType("");
+    //   setBudget(0);
+    // }
+    try {
+      const tripData: PostTripRequest = {
+        title: tripName.trim(),
+        description: `${travelType} trip with budget ${budget} per day`,
+        start_date: startDate,
+        end_date: endDate,
+        status: 'PLANNED',
+        location: {
+          name: destination.trim(),
+          address: destination.trim(),
+          city: destination.trim(),
+          country: destination.trim(),
+          latitude: 0, 
+          longitude: 0, 
+        }
+      };
+  
+      const response = await dispatch(postTrip(tripData)).unwrap();
+      
+      if (response) {
+        snackbarRef.current?.showSnackbar('Trip created successfully!', 'success');
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+        // Reset form
+        setStep(1);
+        setTripName("");
+        setDestination("");
+        setStartDate("");
+        setEndDate("");
+        setFriends(['']);
+        setTravelType("");
+        setBudget(0);
+      }
+    } catch (error: any) {
+      snackbarRef.current?.showSnackbar(
+        error.message || 'Failed to create trip', 
+        'error'
+      );
    
   }
+};
 
   const today = new Date().toISOString().split("T")[0];
 
