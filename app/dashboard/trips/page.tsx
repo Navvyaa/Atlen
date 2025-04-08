@@ -7,7 +7,7 @@ const page = () => {
 
     <section className='w-full h-full relative'>
       <section className='w-full'>
-        trips
+        tripsss
       </section>
         {/* <section className='w-full absolute bottom-0'>
           <Footer />
