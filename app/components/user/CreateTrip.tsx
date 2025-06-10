@@ -38,6 +38,12 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
   const [travelType, setTravelType] = useState<string>("");
   const [budget, setBudget] = useState<number>(0);
 
+  const travellingWith=[
+    {type:'Couple',img:'/couple.svg'},
+    {type:'Family',img:'/family.svg'},
+    {type:'Friends',img:'/friends.svg'},
+    {type:'Solo',img:'/solo.svg'},
+  ]
  
 
   const handlecreateTrip = async (event: React.FormEvent) => {
@@ -61,63 +67,65 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
       snackbarRef.current?.showSnackbar('Please provide valid email addresses ', 'error');
       return;
     }
-    // setStep(2);
-    // setIsInviteModalOpen(false);
-    // if (step == 2) {
-    //   // onClose();
-
-    //   console.log(tripName, destination, startDate, endDate, friends,travelType,budget);
-    //   onClose();
-    //   setStep(1);
-    //   setTripName("");
-    //   setDestination("");
-    //   setStartDate("");
-    //   setEndDate("");
-    //   setFriends(['']);
-    //   setTravelType("");
-    //   setBudget(0);
-    // }
-    try {
-      const tripData: PostTripRequest = {
-        title: tripName.trim(),
-        description: `${travelType} trip with budget ${budget} per day`,
-        start_date: startDate,
-        end_date: endDate,
-        status: 'PLANNED',
-        location: {
-          name: destination.trim(),
-          address: destination.trim(),
-          city: destination.trim(),
-          country: destination.trim(),
-          latitude: 0, 
-          longitude: 0, 
-        }
-      };
-  
-      const response = await dispatch(postTrip(tripData)).unwrap();
-      
-      if (response) {
-        snackbarRef.current?.showSnackbar('Trip created successfully!', 'success');
-        setTimeout(() => {
-          onClose();
-        }, 2000);
-        // Reset form
+    setStep(2);
+    setIsInviteModalOpen(false);
+    if (step == 2) {
+      snackbarRef.current?.showSnackbar('Trip created successfully!', 'success');
+      setTimeout(()=>{
+        onClose();
         setStep(1);
-        setTripName("");
-        setDestination("");
-        setStartDate("");
-        setEndDate("");
-        setFriends(['']);
-        setTravelType("");
-        setBudget(0);
-      }
-    } catch (error: any) {
-      snackbarRef.current?.showSnackbar(
-        error.message || 'Failed to create trip', 
-        'error'
-      );
+      setTripName("");
+      setDestination("");
+      setStartDate("");
+      setEndDate("");
+      setFriends(['']);
+      setTravelType("");
+      setBudget(0);
+      },2000);
+      
+      
+    }
+  //   try {
+  //     const tripData: PostTripRequest = {
+  //       title: tripName.trim(),
+  //       description: `${travelType} trip with budget ${budget} per day`,
+  //       start_date: startDate,
+  //       end_date: endDate,
+  //       status: 'PLANNED',
+  //       location: {
+  //         name: destination.trim(),
+  //         address: destination.trim(),
+  //         city: destination.trim(),
+  //         country: destination.trim(),
+  //         latitude: 0, 
+  //         longitude: 0, 
+  //       }
+  //     };
+  
+  //     const response = await dispatch(postTrip(tripData)).unwrap();
+      
+  //     if (response) {
+  //       snackbarRef.current?.showSnackbar('Trip created successfully!', 'success');
+  //       setTimeout(() => {
+  //         onClose();
+  //       }, 2000);
+  //       // Reset form
+  //       setStep(1);
+  //       setTripName("");
+  //       setDestination("");
+  //       setStartDate("");
+  //       setEndDate("");
+  //       setFriends(['']);
+  //       setTravelType("");
+  //       setBudget(0);
+  //     }
+  //   } catch (error: any) {
+  //     snackbarRef.current?.showSnackbar(
+  //       error.message || 'Failed to create trip', 
+  //       'error'
+  //     );
    
-  }
+  // }
 };
 
   const today = new Date().toISOString().split("T")[0];
@@ -232,19 +240,19 @@ const CreateTrip: React.FC<CreateTripProps> = ({ open, onClose }) => {
             <div className="mb-8">
               <h3 className="text-xl font-semibold mb-4">Who is travelling with you?</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-center">
-                {['Couple', 'Family', 'Friends', 'Solo'].map((type) => (
+                {travellingWith.map(({ type, img }) => (
                   <div
-                    key={type}
-                    onClick={() => setTravelType(type)}
-
-                    className={`p-4 border rounded-xl cursor-pointer transition-all ${travelType === type
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-primary/50'
-                      }`}
+                  key={type}
+                  onClick={() => setTravelType(type)}
+                  className={`p-4 border rounded-xl cursor-pointer transition-all ${travelType === type
+                    ? 'border-primary bg-primary/5'
+                    : 'border-gray-200 hover:border-primary/50'
+                    }`}
                   >
-                    
-                    <div className="w-16 h-16 mx-auto mb-2  bg-gray-100 rounded-full"></div>
-                    <p className="text-center">{type}</p>
+                  <div className="w-16 h-16 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center">
+                    <Image src={img} alt={type} width={60} height={60} />
+                  </div>
+                  <p className="text-center">{type}</p>
                   </div>
                 ))}
               </div>

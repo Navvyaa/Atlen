@@ -10,19 +10,20 @@ interface DestinationOverviewProps {
 
 const DestinationOverview:React.FC <DestinationOverviewProps> = ({country}) => {
     const [activeButton, setActiveButton] = useState<string>('');
+    const [selectedDestination, setSelectedDestination] = useState<string>('');
     const topDestinations = [
         {img: '/rectangle.svg', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
-        // {img: '/France.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
         {img: '/Japan.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
         {img: '/Japan.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
         {img: '/Sri Lanka.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
-        // {img: '/Finland.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
         {img: '/Singapore.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
         {img: '/Singapore.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
         {img: '/Singapore.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
         {img: '/Singapore.png', name: 'Male',text:'Check out Atoll Transfer, Hukuru Miskiiy Mosque, and more'},
        
     ];
+
+    
     return (
         <section className="w-[98%] mx-auto lg:w-[96%] h-full mt-6 relative">
             <div className="relative h-[300px] ">
@@ -36,6 +37,12 @@ const DestinationOverview:React.FC <DestinationOverviewProps> = ({country}) => {
                 
             </div>
             <div className="flex gap-5 my-3">
+                    <ServiceButton 
+                    icon="/hotel.svg" 
+                    text="Top Destinations"
+                    onClick={() => setActiveButton('destination')}
+                    isActive={activeButton === 'destination'}
+                    />
                     <ServiceButton 
                     icon="/restraunt.svg" 
                     text="Where to eat"
@@ -55,7 +62,10 @@ const DestinationOverview:React.FC <DestinationOverviewProps> = ({country}) => {
             <div className="lg:flex hidden flex-wrap gap-5 my-5   items-start justify-around">
                 {topDestinations.map((destination, index) => (
                     // (index < 6 || window.innerWidth >= 1024) && 
-                    <div key={index} className="w-[295px] min-h-[300px] bg-white border border-gray-300 rounded-2xl mx-3 my-3">
+                    <div 
+                    key={index} 
+                    // onClick={handleSelectDestination}
+                    className="w-[295px] min-h-[300px] bg-white border border-gray-300 rounded-2xl mx-3 my-3">
                         <img src={destination.img} alt={destination.name} className="w-full h-[200px] object-cover rounded-t-2xl" />
                         <div className="p-3">
                             <h2 className="text-xl font-semibold px-2">{destination.name}</h2>
@@ -64,6 +74,7 @@ const DestinationOverview:React.FC <DestinationOverviewProps> = ({country}) => {
                     </div>
                 ))}
             </div>
+
         </section>
     );
 };
